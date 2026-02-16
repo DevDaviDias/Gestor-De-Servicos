@@ -34,7 +34,6 @@ meu-projeto/
 │   │   └── utils.js        # Formatadores e funções auxiliares
 │   └── main.js            # Ponto de entrada (Main Script) do Vite
 ├── .env                   # Variáveis de ambiente (Chaves secretas - Não versionado)
-├── .env.example           # Modelo para configuração das variáveis de ambiente
 ├── index.html             # Tela principal (Formulário de Cadastro)
 ├── clientes.html          # Página de Listagem e Gerenciamento
 ├── relatorios.html        # Painel de métricas financeiras
