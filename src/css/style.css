@@ -695,6 +695,35 @@ textarea { resize: vertical; min-height: 80px; }
   gap: 14px;
   text-align: left;
 }
+.alert {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  font-weight: 500;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  display: none; /* remove o display:flex daqui */
+}
+
+.alert.show {
+  display: flex; /* só mostra quando tiver a classe show */
+}
+.auth-footer {
+  margin-top: 16px;
+  font-size: 0.9rem;
+  color: var(--gray-600);
+}
+.auth-footer-link {
+  color: var(--blue);
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.text-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray-600);
+}
 
 /* ─── Responsive ─────────────────────────────────────────────────────────────── */
 @media (min-width: 480px) {

@@ -16,12 +16,12 @@
 
       <form id="loginForm" class="auth-form">
         <div class="form-group">
-          <label for="email">Email</label>
+          <label class="text-label" for="email">Email</label>
           <input type="email" id="email" placeholder="seu@email.com" required autocomplete="email">
         </div>
         <div class="form-group">
-          <label for="password">Senha</label>
-          <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+          <label class="text-label" for="password">Senha</label>
+          <input  type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
         </div>
 
         <div id="errorMsg" class="error-msg" style="display:none;"></div>
@@ -30,12 +30,14 @@
           Entrar
         </button>
       </form>
+
+      <div class="auth-footer">
+  Não tem conta? <a href="register.html"> <span class="auth-footer-link">Criar conta</span></a>
+</div>
     </div>
   </div>
   <!-- Adiciona no final do formulário de login -->
-<div class="auth-footer">
-  Não tem conta? <a href="register.html">Criar conta</a>
-</div>
+
 
   <script type="module" src="./src/js/main.js"></script>
 </body>

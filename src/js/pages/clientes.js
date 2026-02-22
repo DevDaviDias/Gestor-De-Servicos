@@ -2,7 +2,7 @@ import { requireAuth } from './auth.js';
 import {
   getClients, updateClient, deleteClient,
   getWarrantyDaysLeft, getWarrantyExpiry,
-  shareOnWhatsApp, formatCurrency, formatDate
+  formatCurrency, formatDate
 } from '../services.js';
 
 export const initClientesPage = async () => {
@@ -14,13 +14,16 @@ export const initClientesPage = async () => {
   const searchInput = document.getElementById('searchInput');
   const editModal = document.getElementById('editModal');
   const deleteModal = document.getElementById('deleteModal');
+  const receiptModal = document.getElementById('receiptModal');
   const editForm = document.getElementById('editForm');
   const warrantyAlert = document.getElementById('warrantyAlert');
 
   let allClients = [];
   let currentEditId = null;
   let currentDeleteId = null;
+  let currentReceiptClient = null;
 
+  // ── Load Clients ──────────────────────────────────────────────────────────
   const loadClients = async () => {
     loading.style.display = 'flex';
     container.style.display = 'none';
@@ -37,12 +40,12 @@ export const initClientesPage = async () => {
     renderClients(allClients);
   };
 
+  // ── Warranty Alerts ───────────────────────────────────────────────────────
   const checkWarrantyAlerts = (clients) => {
     const expiring = clients.filter(c => {
       const days = getWarrantyDaysLeft(c);
       return days >= 0 && days <= 30;
     });
-
     if (expiring.length > 0) {
       warrantyAlert.style.display = 'flex';
       warrantyAlert.querySelector('.alert-text').innerHTML =
@@ -51,6 +54,7 @@ export const initClientesPage = async () => {
     }
   };
 
+  // ── Warranty Badge ────────────────────────────────────────────────────────
   const getWarrantyBadge = (client) => {
     const days = getWarrantyDaysLeft(client);
     const expiry = getWarrantyExpiry(client).toLocaleDateString('pt-BR');
@@ -60,6 +64,7 @@ export const initClientesPage = async () => {
     return `<span class="warranty-badge ok">🟢 Válida até ${expiry}</span>`;
   };
 
+  // ── Render Clients ────────────────────────────────────────────────────────
   const renderClients = (clients) => {
     loading.style.display = 'none';
     container.style.display = 'grid';
@@ -85,9 +90,7 @@ export const initClientesPage = async () => {
             <span>💰 ${formatCurrency(client.serviceValue)}</span>
           </div>
 
-          <div class="warranty-row">
-            ${getWarrantyBadge(client)}
-          </div>
+          <div class="warranty-row">${getWarrantyBadge(client)}</div>
 
           ${client.parts?.length ? `
             <div class="parts-mini">
@@ -99,12 +102,13 @@ export const initClientesPage = async () => {
             <p class="observations">📝 ${client.observations}</p>` : ''}
 
           <div class="card-actions">
-            <button class="btn-whatsapp" onclick="window._shareWhatsApp('${client.id}')">
-              📤 WhatsApp
+            <button class="btn-share" onclick="window._openReceipt('${client.id}')">
+              📄 Comprovante
             </button>
-            <button class="btn-edit" onclick="window._editClient('${client.id}')">
-              ✏️ Editar
-            </button>
+            ${client.paymentStatus === 'nao-pago' ? `
+              <button class="btn-edit" onclick="window._editClient('${client.id}')">
+                ✏️ Editar
+              </button>` : `<div></div>`}
             <button class="btn-delete" onclick="window._deleteClient('${client.id}')">
               🗑️
             </button>
@@ -114,7 +118,7 @@ export const initClientesPage = async () => {
     `).join('');
   };
 
-  // Search
+  // ── Search ────────────────────────────────────────────────────────────────
   searchInput?.addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase();
     renderClients(allClients.filter(c =>
@@ -123,12 +127,145 @@ export const initClientesPage = async () => {
     ));
   });
 
-  // Global handlers
-  window._shareWhatsApp = (id) => {
+  // ── Receipt ───────────────────────────────────────────────────────────────
+  window._openReceipt = (id) => {
     const client = allClients.find(c => c.id === id);
-    if (client) shareOnWhatsApp(client);
+    if (!client) return;
+    currentReceiptClient = client;
+
+    // Fill receipt data
+    document.getElementById('rClientName').textContent = client.clientName;
+    document.getElementById('rDate').textContent = formatDate(client.serviceDate);
+    document.getElementById('rWarranty').textContent = `${client.warranty} ${client.warranty === 1 ? 'mês' : 'meses'}`;
+    document.getElementById('rExpiry').textContent = getWarrantyExpiry(client).toLocaleDateString('pt-BR');
+    document.getElementById('rTotal').textContent = formatCurrency(client.serviceValue);
+    document.getElementById('rObs').textContent = client.observations || 'Nenhuma observação.';
+
+    // Badge
+    const badge = document.getElementById('receiptBadge');
+    badge.textContent = client.paymentStatus === 'pago' ? 'PAGO' : 'PENDENTE';
+    badge.className = `receipt-badge${client.paymentStatus !== 'pago' ? ' pending' : ''}`;
+
+    // Photo
+    const photoWrap = document.getElementById('receiptPhotoWrap');
+    const photoImg = document.getElementById('receiptPhoto');
+    if (client.photoURL) {
+      photoImg.src = client.photoURL;
+      photoWrap.classList.add('has-photo');
+    } else {
+      photoWrap.classList.remove('has-photo');
+    }
+
+    // Parts
+    const partsEl = document.getElementById('rParts');
+if (client.parts?.length) {
+  partsEl.innerHTML = client.parts.map(p => `
+    <div class="receipt-part-row">
+      <span>${p.name}</span>
+    </div>
+  `).join('');
+} else {
+      partsEl.innerHTML = '<p style="font-size:0.82rem;color:#9095a1;padding:4px 0;">Nenhuma peça registrada.</p>';
+    }
+
+    receiptModal.style.display = 'flex';
   };
 
+  // ── Share on WhatsApp ─────────────────────────────────────────────────────
+  document.getElementById('shareWhatsAppBtn')?.addEventListener('click', async () => {
+    const client = currentReceiptClient;
+    if (!client) return;
+
+    const btn = document.getElementById('shareWhatsAppBtn');
+    btn.textContent = '⏳ Gerando...';
+    btn.disabled = true;
+
+    try {
+      // Try to generate image and share via Web Share API
+      const html2canvas = (await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.esm.js')).default;
+      const canvas = await html2canvas(document.getElementById('receiptContent'), {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff'
+      });
+
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], 'comprovante.png', { type: 'image/png' });
+
+        // Try native share with image
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            title: `Comprovante — ${client.clientName}`,
+            files: [file]
+          });
+        } else {
+          // Fallback: WhatsApp text
+          shareTextWhatsApp(client);
+        }
+      }, 'image/png');
+
+    } catch (err) {
+      console.error(err);
+      shareTextWhatsApp(client);
+    } finally {
+      btn.textContent = '📤 Compartilhar no WhatsApp';
+      btn.disabled = false;
+    }
+  });
+
+  // Fallback text share
+  const shareTextWhatsApp = (client) => {
+    const expiry = getWarrantyExpiry(client).toLocaleDateString('pt-BR');
+    const parts = client.parts?.length
+      ? client.parts.map(p => `  • ${p.name}: ${formatCurrency(p.cost)}`).join('\n')
+      : '  Nenhuma peça registrada';
+
+    const message = `🔧 *COMPROVANTE DE SERVIÇO*
+━━━━━━━━━━━━━━━━━━━━
+👤 *Cliente:* ${client.clientName}
+📅 *Data:* ${formatDate(client.serviceDate)}
+💰 *Valor:* ${formatCurrency(client.serviceValue)}
+✅ *Pagamento:* ${client.paymentStatus === 'pago' ? 'Pago' : '⏳ Pendente'}
+
+🔩 *Peças utilizadas:*
+${parts}
+
+🛡️ *Garantia:* ${client.warranty} ${client.warranty === 1 ? 'mês' : 'meses'}
+📆 *Válida até:* ${expiry}
+${client.observations ? `\n📝 *Obs:* ${client.observations}` : ''}
+━━━━━━━━━━━━━━━━━━━━
+_Guarde este comprovante para referência._`;
+
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
+  // ── Download Receipt ──────────────────────────────────────────────────────
+  document.getElementById('downloadReceiptBtn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('downloadReceiptBtn');
+    btn.textContent = '⏳ Gerando imagem...';
+    btn.disabled = true;
+
+    try {
+      const html2canvas = (await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.esm.js')).default;
+      const canvas = await html2canvas(document.getElementById('receiptContent'), {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff'
+      });
+
+      const link = document.createElement('a');
+      link.download = `comprovante_${currentReceiptClient?.clientName || 'servico'}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (err) {
+      alert('Erro ao gerar imagem. Tente novamente.');
+    } finally {
+      btn.textContent = '⬇️ Baixar Imagem';
+      btn.disabled = false;
+    }
+  });
+
+  // ── Edit Client ───────────────────────────────────────────────────────────
   window._editClient = (id) => {
     const client = allClients.find(c => c.id === id);
     if (!client) return;
@@ -142,12 +279,13 @@ export const initClientesPage = async () => {
     editModal.style.display = 'flex';
   };
 
+  // ── Delete Client ─────────────────────────────────────────────────────────
   window._deleteClient = (id) => {
     currentDeleteId = id;
     deleteModal.style.display = 'flex';
   };
 
-  // Edit form
+  // ── Edit Form Submit ──────────────────────────────────────────────────────
   editForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!currentEditId) return;
@@ -167,7 +305,7 @@ export const initClientesPage = async () => {
     }
   });
 
-  // Delete confirm
+  // ── Delete Confirm ────────────────────────────────────────────────────────
   document.getElementById('confirmDelete')?.addEventListener('click', async () => {
     if (!currentDeleteId) return;
     try {
@@ -179,17 +317,19 @@ export const initClientesPage = async () => {
     }
   });
 
-  // Close modals
+  // ── Close Modals ──────────────────────────────────────────────────────────
   document.querySelectorAll('.modal-close, .modal-cancel, #cancelDelete').forEach(btn => {
     btn.addEventListener('click', () => {
       editModal.style.display = 'none';
       deleteModal.style.display = 'none';
+      receiptModal.style.display = 'none';
     });
   });
 
   window.addEventListener('click', (e) => {
     if (e.target === editModal) editModal.style.display = 'none';
     if (e.target === deleteModal) deleteModal.style.display = 'none';
+    if (e.target === receiptModal) receiptModal.style.display = 'none';
   });
 
   loadClients();
