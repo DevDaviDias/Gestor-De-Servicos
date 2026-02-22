@@ -74,9 +74,17 @@ export const initCadastroPage = async () => {
         parts,
         photoURL
       });
+// Troca isso:
+successMessage.style.display = 'flex';
+setTimeout(() => successMessage.style.display = 'none', 3500);
 
-      successMessage.style.display = 'flex';
-      setTimeout(() => successMessage.style.display = 'none', 3500);
+// Por isso:
+successMessage.classList.add('show');
+setTimeout(() => successMessage.classList.remove('show'), 3500);
+
+// E o erro também:
+errorMessage.classList.add('show');
+setTimeout(() => errorMessage.classList.remove('show'), 3500);
       form.reset();
       photoPreview.innerHTML = '';
       document.getElementById('serviceDate').valueAsDate = new Date();
