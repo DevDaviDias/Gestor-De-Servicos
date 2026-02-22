@@ -213,24 +213,26 @@
 
       <form id="registerForm">
         <div class="form-group">
-          <label class="text-label"  for="name">Seu Nome</label>
+          <label for="name">Seu Nome</label>
           <input type="text" id="name" placeholder="Ex: João Silva" required autocomplete="name">
         </div>
 
         <div class="form-group">
-          <label class="text-label"  for="email">Email</label>
+          <label for="email">Email</label>
           <input type="email" id="email" placeholder="seu@email.com" required autocomplete="email">
         </div>
 
         <div class="form-group">
-          <label class="text-label" for="password">Senha</label>
+          <label for="password">Senha</label>
           <input type="password" id="password" placeholder="Mínimo 6 caracteres" required autocomplete="new-password">
-         
-          
+          <div class="strength-bar">
+            <div class="strength-fill" id="strengthFill"></div>
+          </div>
+          <span class="password-hint" id="strengthLabel"></span>
         </div>
 
         <div class="form-group">
-          <label class="text-label" for="confirmPassword">Confirmar Senha</label>
+          <label for="confirmPassword">Confirmar Senha</label>
           <input type="password" id="confirmPassword" placeholder="Repita a senha" required autocomplete="new-password">
         </div>
 
