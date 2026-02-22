@@ -1,19 +1,21 @@
-import { ClienteService } from './services.js';
+import { logout } from './pages/auth.js';
 
-const form = document.getElementById('clientForm');
+// Expose logout globally for nav button
+window.logout = logout;
 
-form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    // Captura os dados do formulário
-    const formData = new FormData(form);
-    const dados = Object.fromEntries(formData.entries());
+// Route to correct page init
+const page = window.location.pathname.split('/').pop() || 'index.html';
 
-    try {
-        await ClienteService.salvar(dados);
-        alert("Cliente salvo no banco de dados com sucesso!");
-        form.reset();
-    } catch (error) {
-        alert("Erro ao salvar no Firebase.");
-    }
+const routes = {
+  'index.html': () => import('./pages/cadastro.js').then(m => m.initCadastroPage()),
+  '': () => import('./pages/cadastro.js').then(m => m.initCadastroPage()),
+  'clientes.html': () => import('./pages/clientes.js').then(m => m.initClientesPage()),
+  'relatorios.html': () => import('./pages/relatorios.js').then(m => m.initRelatoriosPage()),
+  'login.html': () => import('./pages/auth.js').then(m => m.initAuthPage()),
+  'register.html': () => import('./pages/auth.js').then(m => m.initRegisterPage()),
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const init = routes[page];
+  if (init) init().catch(console.error);
 });
