@@ -1,104 +1,726 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="https://public-frontend-cos.metadl.com/mgx/img/favicon.png" type="image/png">
-    <title>Cadastro de Cliente - Gestão de Serviços</title>
-    <link rel="stylesheet" href="./style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro — Gestão de Serviços</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/css/style.css">
+  <link rel="icon" href="/pwa-192x192.png">
+  <style>
+    :root {
+      --ink: #0f1117;
+      --ink-soft: #4a4e5a;
+      --ink-muted: #9095a1;
+      --surface: #f5f6f8;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --accent-glow: rgba(37,99,235,0.15);
+      --accent-soft: #eff4ff;
+      --success: #059669;
+      --success-soft: #ecfdf5;
+      --danger: #dc2626;
+      --danger-soft: #fef2f2;
+      --warn: #d97706;
+      --border: #e8eaee;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --nav: 68px;
+      --header: 60px;
+      --shadow-card: 0 2px 16px rgba(15,17,23,0.08);
+      --shadow-btn: 0 4px 14px rgba(37,99,235,0.35);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      min-height: 100vh;
+      padding-top: var(--header);
+      padding-bottom: calc(var(--nav) + 20px);
+    }
+
+    /* ── Header ── */
+    .top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header);
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 100;
+    }
+
+    .app-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--accent);
+      letter-spacing: -0.3px;
+    }
+
+    /* ── Page ── */
+    .page-content {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 24px 16px 0;
+    }
+
+    /* ── Step Header ── */
+    .step-header {
+      margin-bottom: 24px;
+    }
+
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: all 0.3s;
+    }
+    .step-dot.active {
+      background: var(--accent);
+      width: 24px;
+      border-radius: 4px;
+    }
+    .step-dot.done { background: var(--success); }
+
+    .step-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+    }
+
+    /* ── Steps ── */
+    .step { display: none; animation: fadeSlide 0.3s ease; }
+    .step.active { display: block; }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateX(16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ── Cards ── */
+    .form-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── Form Groups ── */
+    .form-group { display: flex; flex-direction: column; gap: 7px; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      letter-spacing: 0.1px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: var(--surface);
+      transition: all 0.2s;
+      -webkit-appearance: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      background: var(--card);
+      box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+
+    textarea { resize: none; min-height: 90px; line-height: 1.5; }
+
+    /* ── Photo Upload ── */
+    .photo-upload-area {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-md);
+      padding: 28px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .photo-upload-area:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+    .photo-upload-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .photo-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .photo-text {
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+    .photo-text strong { color: var(--accent); }
+
+    .photo-preview {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-top: 12px;
+      display: none;
+    }
+    .photo-preview.has-photo { display: block; }
+    .photo-preview img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    /* ── Parts ── */
+    .parts-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .part-item {
+      display: grid;
+      grid-template-columns: 1fr 100px 36px;
+      gap: 8px;
+      align-items: center;
+      background: var(--surface);
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+    }
+
+    .part-item input {
+      background: var(--card);
+      padding: 9px 12px;
+      font-size: 0.88rem;
+    }
+
+    .btn-remove-part {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--danger-soft);
+      color: var(--danger);
+      border: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .btn-remove-part:hover { background: #fecaca; }
+
+    .btn-add-part {
+      width: 100%;
+      padding: 11px;
+      border: 1.5px dashed var(--accent);
+      border-radius: var(--radius-sm);
+      background: none;
+      color: var(--accent);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 4px;
+    }
+    .btn-add-part:hover { background: var(--accent-soft); }
+
+    /* ── Payment Toggle ── */
+    .payment-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .toggle-option {
+      position: relative;
+    }
+
+    .toggle-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--border);
+      background: var(--surface);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--ink-soft);
+    }
+
+    .toggle-option input:checked + .toggle-label {
+      border-color: var(--success);
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .toggle-option input:checked + .toggle-label.pending-label {
+      border-color: var(--warn);
+      background: #fffbeb;
+      color: var(--warn);
+    }
+
+    /* ── Summary Card ── */
+    .summary-card {
+      background: var(--ink);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      color: white;
+    }
+
+    .summary-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.5;
+      margin-bottom: 16px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.9rem;
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row span:first-child { opacity: 0.6; }
+    .summary-row span:last-child { font-weight: 500; }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow-btn);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 0.2px;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 14px;
+      background: var(--surface);
+      color: var(--ink-soft);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: var(--border); }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    /* ── Alerts ── */
+    .alert {
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .alert.show { display: flex; }
+    .alert-success { background: var(--success-soft); color: var(--success); }
+    .alert-error { background: var(--danger-soft); color: var(--danger); }
+
+    /* ── Bottom Nav ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: var(--nav);
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 8px 0;
+    }
+    .nav-item.active { color: var(--accent); }
+    .nav-icon { font-size: 1.25rem; }
+    .nav-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Spinner ── */
+    .spinner-sm {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <header class="page-header">
-            <h1>📝 Cadastro de Cliente</h1>
-        </header>
+  <header class="top-bar">
+    <span class="app-name">🔧 Gestão de Serviços</span>
+  </header>
 
-        <form id="clientForm" class="form-container">
-            <div class="form-group">
-                <label for="clientName">Nome do Cliente *</label>
-                <input type="text" id="clientName" name="clientName" required>
-            </div>
-
-            <div class="form-group">
-                <label for="serviceDate">Data do Serviço *</label>
-                <input type="date" id="serviceDate" name="serviceDate" required>
-            </div>
-
-            <div class="form-group">
-                <label for="warranty">Garantia (meses) *</label>
-                <input type="number" id="warranty" name="warranty" min="0" max="60" required>
-            </div>
-
-            <div class="form-group">
-                <label for="serviceValue">Valor Cobrado (R$) *</label>
-                <input type="number" id="serviceValue" name="serviceValue" step="0.01" min="0" required>
-            </div>
-
-            <div class="form-group">
-                <label for="paymentStatus">Status de Pagamento *</label>
-                <select id="paymentStatus" name="paymentStatus" required>
-                    <option value="">Selecione...</option>
-                    <option value="pago">Pago</option>
-                    <option value="nao-pago">Não Pago</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="parts">Peças Utilizadas</label>
-                <div id="partsContainer">
-                    <div class="part-item">
-                        <input type="text" placeholder="Nome da peça" class="part-name">
-                        <input type="number" placeholder="Custo (R$)" class="part-cost" step="0.01" min="0">
-                        <button type="button" class="btn-remove-part">❌</button>
-                    </div>
-                </div>
-                <button type="button" id="addPart" class="btn-secondary">➕ Adicionar Peça</button>
-            </div>
-
-            <div class="form-group">
-                <label for="observations">Observações</label>
-                <textarea id="observations" name="observations" rows="3"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="servicePhoto">Foto do Serviço</label>
-                <input type="file" id="servicePhoto" name="servicePhoto" accept="image/*" capture="environment">
-                <div id="photoPreview" class="photo-preview"></div>
-            </div>
-
-            <button type="submit" id="submitBtn" class="btn-primary">
-                <span id="submitText">💾 Salvar Cliente</span>
-                <div id="loadingSpinner" class="spinner" style="display: none;"></div>
-            </button>
-        </form>
-
-        <div id="successMessage" class="success-message" style="display: none;">
-            ✅ Cliente cadastrado com sucesso!
-        </div>
-
-        <div id="errorMessage" class="error-message" style="display: none;">
-            ❌ Erro ao cadastrar cliente. Tente novamente.
-        </div>
+  <main class="page-content">
+    <div id="successMessage" class="alert alert-success">
+      ✅ Cliente cadastrado com sucesso!
+    </div>
+    <div id="errorMessage" class="alert alert-error">
+      ❌ Erro ao cadastrar. Tente novamente.
     </div>
 
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item active">
-            <span class="nav-icon">📝</span>
-            <span class="nav-label">Cadastro</span>
-        </a>
-        <a href="clientes.html" class="nav-item">
-            <span class="nav-icon">👥</span>
-            <span class="nav-label">Clientes</span>
-        </a>
-        <a href="relatorios.html" class="nav-item">
-            <span class="nav-icon">📊</span>
-            <span class="nav-label">Relatórios</span>
-        </a>
-    </nav>
+    <!-- Step Indicator -->
+    <div class="step-header">
+      <div class="step-indicator">
+        <div class="step-dot active" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+        <div class="step-dot" id="dot3"></div>
+      </div>
+      <div class="step-label" id="stepLabel">Passo 1 de 3</div>
+      <div class="step-title" id="stepTitle">Cliente & Serviço</div>
+    </div>
 
-    <script type="module" src="./app.js"></script>
+    <form id="clientForm">
+
+      <!-- ── STEP 1: Cliente & Serviço ── -->
+      <div class="step active" id="step1">
+        <div class="form-card">
+          <div class="form-group">
+            <label for="clientName">Nome do Cliente</label>
+            <input type="text" id="clientName" name="clientName" placeholder="Ex: João Silva" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="serviceDate">Data do Serviço</label>
+              <input type="date" id="serviceDate" name="serviceDate" required>
+            </div>
+            <div class="form-group">
+              <label for="warranty">Garantia (meses)</label>
+              <input type="number" id="warranty" name="warranty" min="0" max="60" value="3" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="serviceValue">Valor Cobrado (R$)</label>
+            <input type="number" id="serviceValue" name="serviceValue" step="0.01" min="0" placeholder="0,00" required>
+          </div>
+
+          <div class="form-group">
+            <label>Pagamento</label>
+            <div class="payment-toggle">
+              <div class="toggle-option">
+                <input type="radio" name="paymentStatus" id="pago" value="pago" checked>
+                <label class="toggle-label" for="pago">✅ Pago</label>
+              </div>
+              <div class="toggle-option">
+                <input type="radio" name="paymentStatus" id="naopago" value="nao-pago">
+                <label class="toggle-label pending-label" for="naopago">⏳ Pendente</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <div></div>
+            <button type="button" class="btn-primary" onclick="goToStep(2)">
+              Próximo →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 2: Peças & Observações ── -->
+      <div class="step" id="step2">
+        <div class="form-card">
+          <div class="form-group">
+            <label>Peças Utilizadas</label>
+            <div class="parts-list" id="partsContainer">
+              <div class="part-item">
+                <input type="text" placeholder="Nome da peça" class="part-name">
+                <input type="number" placeholder="R$ 0,00" class="part-cost" step="0.01" min="0">
+                <button type="button" class="btn-remove-part" aria-label="Remover">✕</button>
+              </div>
+            </div>
+            <button type="button" id="addPart" class="btn-add-part">+ Adicionar Peça</button>
+          </div>
+
+          <div class="form-group">
+            <label for="observations">Observações</label>
+            <textarea id="observations" name="observations" placeholder="Descreva o problema e o que foi feito..."></textarea>
+          </div>
+
+          <div class="btn-row">
+            <button type="button" class="btn-secondary" onclick="goToStep(1)">← Voltar</button>
+            <button type="button" class="btn-primary" onclick="goToStep(3)">Próximo →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: Foto & Confirmar ── -->
+      <div class="step" id="step3">
+        <div class="form-card" style="gap:20px;">
+
+          <div class="form-group">
+            <label>Foto do Serviço</label>
+            <div class="photo-upload-area" id="photoUploadArea">
+              <input type="file" id="servicePhoto" accept="image/*" capture="environment">
+              <div class="photo-icon">📷</div>
+              <div class="photo-text">
+                <strong>Toque para tirar foto</strong><br>
+                ou escolher da galeria
+              </div>
+            </div>
+            <div class="photo-preview" id="photoPreview">
+              <img id="photoImg" src="" alt="Preview">
+            </div>
+          </div>
+
+          <!-- Resumo -->
+          <div class="summary-card" id="summaryCard">
+            <div class="summary-title">Resumo do Serviço</div>
+            <div class="summary-row">
+              <span>Cliente</span>
+              <span id="sumName">—</span>
+            </div>
+            <div class="summary-row">
+              <span>Data</span>
+              <span id="sumDate">—</span>
+            </div>
+            <div class="summary-row">
+              <span>Valor</span>
+              <span id="sumValue">—</span>
+            </div>
+            <div class="summary-row">
+              <span>Garantia</span>
+              <span id="sumWarranty">—</span>
+            </div>
+            <div class="summary-row">
+              <span>Pagamento</span>
+              <span id="sumStatus">—</span>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button type="button" class="btn-secondary" onclick="goToStep(2)">← Voltar</button>
+            <button type="submit" id="submitBtn" class="btn-primary">
+              <span id="submitText">💾 Salvar</span>
+              <span class="spinner-sm" id="loadingSpinner"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+      <span class="nav-icon">📝</span>
+      <span class="nav-label">Cadastro</span>
+    </a>
+    <a href="clientes.html" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span class="nav-label">Clientes</span>
+    </a>
+    <a href="relatorios.html" class="nav-item">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Relatórios</span>
+    </a>
+  </nav>
+
+  <script>
+    // ── Step Navigation ──
+    const steps = ['step1','step2','step3'];
+    const dots = ['dot1','dot2','dot3'];
+    const labels = ['Cliente & Serviço','Peças & Observações','Foto & Confirmar'];
+
+    function goToStep(n) {
+      if (n === 2) {
+        // validate step 1
+        const name = document.getElementById('clientName').value.trim();
+        const date = document.getElementById('serviceDate').value;
+        const value = document.getElementById('serviceValue').value;
+        if (!name || !date || !value) {
+          document.getElementById('clientName').focus();
+          return;
+        }
+      }
+      if (n === 3) updateSummary();
+
+      steps.forEach((s, i) => {
+        document.getElementById(s).classList.toggle('active', i === n - 1);
+        const dot = document.getElementById(dots[i]);
+        dot.classList.remove('active','done');
+        if (i === n - 1) dot.classList.add('active');
+        else if (i < n - 1) dot.classList.add('done');
+      });
+
+      document.getElementById('stepLabel').textContent = `Passo ${n} de 3`;
+      document.getElementById('stepTitle').textContent = labels[n - 1];
+      window.scrollTo(0, 0);
+    }
+
+    function updateSummary() {
+      const fmt = (v) => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v);
+      const fmtDate = (d) => new Date(d+'T12:00:00').toLocaleDateString('pt-BR');
+      document.getElementById('sumName').textContent = document.getElementById('clientName').value || '—';
+      document.getElementById('sumDate').textContent = fmtDate(document.getElementById('serviceDate').value);
+      document.getElementById('sumValue').textContent = fmt(document.getElementById('serviceValue').value || 0);
+      const w = document.getElementById('warranty').value;
+      document.getElementById('sumWarranty').textContent = `${w} ${w == 1 ? 'mês' : 'meses'}`;
+      const paid = document.querySelector('input[name="paymentStatus"]:checked').value === 'pago';
+      document.getElementById('sumStatus').textContent = paid ? '✅ Pago' : '⏳ Pendente';
+    }
+
+    // ── Photo Preview ──
+    document.getElementById('servicePhoto').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        document.getElementById('photoImg').src = ev.target.result;
+        document.getElementById('photoPreview').classList.add('has-photo');
+        document.getElementById('photoUploadArea').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // ── Add Part ──
+    document.getElementById('addPart').addEventListener('click', () => {
+      const item = document.createElement('div');
+      item.className = 'part-item';
+      item.innerHTML = `
+        <input type="text" placeholder="Nome da peça" class="part-name">
+        <input type="number" placeholder="R$ 0,00" class="part-cost" step="0.01" min="0">
+        <button type="button" class="btn-remove-part" aria-label="Remover">✕</button>
+      `;
+      item.querySelector('.btn-remove-part').addEventListener('click', () => item.remove());
+      document.getElementById('partsContainer').appendChild(item);
+    });
+
+    document.getElementById('partsContainer').addEventListener('click', (e) => {
+      if (e.target.classList.contains('btn-remove-part')) {
+        e.target.closest('.part-item').remove();
+      }
+    });
+
+    // ── Loading state ──
+    window.setLoading = (show) => {
+      const btn = document.getElementById('submitBtn');
+      const text = document.getElementById('submitText');
+      const spin = document.getElementById('loadingSpinner');
+      btn.disabled = show;
+      text.style.display = show ? 'none' : 'inline';
+      spin.style.display = show ? 'inline-block' : 'none';
+    };
+
+    // ── Alerts ──
+    window.showAlert = (id) => {
+      const el = document.getElementById(id);
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 3500);
+    };
+  </script>
+
+  <script type="module" src="./src/js/main.js"></script>
 </body>
-
 </html>
