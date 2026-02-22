@@ -5,12 +5,13 @@ import { resolve } from 'path';
 export default defineConfig({
   build: {
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html'),
-        clientes: resolve(__dirname, 'clientes.html'),
-        relatorios: resolve(__dirname, 'relatorios.html'),
-        login: resolve(__dirname, 'login.html'),
-      },
+     input: {
+  main: resolve(__dirname, 'index.html'),
+  clientes: resolve(__dirname, 'clientes.html'),
+  relatorios: resolve(__dirname, 'relatorios.html'),
+  login: resolve(__dirname, 'login.html'),
+  register: resolve(__dirname, 'register.html'), 
+},
     },
   },
   plugins: [
