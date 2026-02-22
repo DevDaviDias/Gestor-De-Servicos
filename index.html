@@ -677,10 +677,11 @@
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (ev) => {
-        document.getElementById('photoImg').src = ev.target.result;
-        document.getElementById('photoPreview').classList.add('has-photo');
-        document.getElementById('photoUploadArea').style.display = 'none';
-      };
+  const photoImg = document.getElementById('photoImg');
+  if (photoImg) photoImg.src = ev.target.result;
+  document.getElementById('photoPreview').classList.add('has-photo');
+  document.getElementById('photoUploadArea').style.display = 'none';
+};
       reader.readAsDataURL(file);
     });
 
