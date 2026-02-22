@@ -41,9 +41,8 @@ export const initAuthPage = () => {
 
 // ─── Register ─────────────────────────────────────────────────────────────────
 export const initRegisterPage = () => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) window.location.href = '/';
-  });
+  // ⚠️ Não redireciona automaticamente na página de registro
+  // pois o Firebase loga ao criar conta e causaria redirect prematuro
 
   const form = document.getElementById('registerForm');
   const errorMsg = document.getElementById('errorMsg');
@@ -57,7 +56,6 @@ export const initRegisterPage = () => {
     const password = document.getElementById('password').value;
     const confirm = document.getElementById('confirmPassword').value;
 
-    // Validations
     if (password !== confirm) {
       errorMsg.textContent = '❌ As senhas não coincidem.';
       errorMsg.style.display = 'block';
@@ -77,7 +75,7 @@ export const initRegisterPage = () => {
     try {
       const { user } = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(user, { displayName: name });
-      window.location.href = '/';
+      window.location.href = '/'; // redireciona só aqui, após tudo pronto
     } catch (err) {
       const messages = {
         'auth/email-already-in-use': '❌ Este email já está em uso.',
