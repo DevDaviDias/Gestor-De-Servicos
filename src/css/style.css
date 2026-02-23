@@ -53,23 +53,24 @@ button { cursor: pointer; font-family: inherit; border: none; outline: none; }
 input, select, textarea { font-family: inherit; outline: none; }
 
 /* ─── Top Bar ────────────────────────────────────────────────────────────────── */
-.top-bar {
-  top: 0; left: 0; right: 0;
-  height: var(--top-bar-height);
-  background: var(--white);
-  border-bottom: 1px solid var(--gray-200);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  box-shadow: var(--shadow);
-}
+ .top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header);
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 100;
+    }
 
-.app-name {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--blue);
-}
+  .app-name {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--accent);
+      letter-spacing: -0.3px;
+    }
 
 .btn-logout {
   background: none;
@@ -724,6 +725,8 @@ textarea { resize: vertical; min-height: 80px; }
   font-weight: 600;
   color: var(--gray-600);
 }
+
+ 
 
 /* ─── Responsive ─────────────────────────────────────────────────────────────── */
 @media (min-width: 480px) {
