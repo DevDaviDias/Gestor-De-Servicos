@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurações — Gestão de Serviços</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/css/style.css">
+  <link rel="icon" href="/pwa-192x192.png">
+  <style>
+    :root {
+      --ink: #0f1117;
+      --ink-soft: #4a4e5a;
+      --ink-muted: #9095a1;
+      --surface: #f5f6f8;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --accent-glow: rgba(37,99,235,0.15);
+      --accent-soft: #eff4ff;
+      --success: #059669;
+      --success-soft: #ecfdf5;
+      --danger: #dc2626;
+      --danger-soft: #fef2f2;
+      --warn: #d97706;
+      --border: #e8eaee;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --nav: 68px;
+      --header: 60px;
+      --sidebar-w: 240px;
+      --shadow-card: 0 2px 16px rgba(15,17,23,0.08);
+      --shadow-btn: 0 4px 14px rgba(37,99,235,0.35);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      min-height: 100vh;
+      padding-top: var(--header);
+      padding-bottom: calc(var(--nav) + 20px);
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header);
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 100;
+    }
+    .app-name {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--accent);
+      letter-spacing: -0.3px;
+    }
+
+    .page-content {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 24px 16px 0;
+    }
+
+    /* ── Page title ── */
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+    .page-subtitle {
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+      margin-bottom: 24px;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--ink-muted);
+      margin: 20px 0 8px;
+    }
+
+    /* ── Config card ── */
+    .config-card {
+      background: var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    /* ── Profile header ── */
+    .profile-header {
+      background: var(--ink);
+      padding: 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .profile-avatar {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+    }
+    .profile-info {}
+    .profile-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: -0.2px;
+    }
+    .profile-email {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 2px;
+    }
+    .profile-badge {
+      margin-left: auto;
+      padding: 4px 10px;
+      background: rgba(37,99,235,0.3);
+      border: 1px solid rgba(37,99,235,0.5);
+      border-radius: 20px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #93b4fb;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    /* ── Config row ── */
+    .config-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .config-row:last-child { border-bottom: none; }
+
+    .config-row-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+    .config-row-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .config-row-text {}
+    .config-row-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .config-row-desc {
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      margin-top: 1px;
+    }
+    .config-row-value {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--ink-soft);
+      text-align: right;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ── Toggle switch ── */
+    .toggle-switch {
+      position: relative;
+      width: 42px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0; height: 0;
+      position: absolute;
+    }
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 18px; height: 18px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+    .toggle-switch input:checked + .toggle-track { background: var(--success); }
+    .toggle-switch input:checked + .toggle-track::after { transform: translateX(18px); }
+
+    /* ── Botão de ação inline ── */
+    .btn-inline {
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--ink-soft);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .btn-inline:hover { background: var(--border); }
+    .btn-inline.danger {
+      border-color: var(--danger-soft);
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+    .btn-inline.danger:hover { background: #fecaca; }
+
+    /* ── Stat row (uso do app) ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0;
+    }
+    .stat-item {
+      padding: 16px 12px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+
+    /* ── Danger zone ── */
+    .danger-card {
+      background: var(--danger-soft);
+      border: 1px solid rgba(220,38,38,0.15);
+    }
+    .danger-card .config-row-title { color: var(--danger); }
+    .danger-card .config-row-icon {
+      background: rgba(220,38,38,0.1);
+      border-color: rgba(220,38,38,0.15);
+    }
+
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: var(--nav);
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      z-index: 100;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 8px 0;
+    }
+    .nav-item.active { color: var(--accent); }
+    .nav-icon { font-size: 1.25rem; }
+    .nav-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Alert toast ── */
+    .toast {
+      position: fixed;
+      bottom: calc(var(--nav) + 12px);
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--ink);
+      color: white;
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 200;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ════════════════════════════════
+       DESKTOP (min-width: 768px)
+    ════════════════════════════════ */
+    @media (min-width: 768px) {
+
+      body {
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-left: var(--sidebar-w);
+        display: flex;
+      }
+
+      .top-bar { display: none; }
+
+      .bottom-nav {
+        top: 0; left: 0; bottom: 0; right: auto;
+        width: var(--sidebar-w);
+        height: 100vh;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 24px;
+        border-top: none;
+        border-right: 1px solid rgba(255,255,255,0.07);
+        background: var(--ink);
+      }
+      .bottom-nav::before {
+        content: '🔧 Gestão de Serviços';
+        display: block;
+        font-weight: 800;
+        font-size: 0.88rem;
+        color: white;
+        padding: 0 20px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        margin-bottom: 12px;
+        letter-spacing: -0.3px;
+      }
+      .nav-item {
+        flex: none;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 12px 20px;
+        gap: 12px;
+        border-radius: 10px;
+        margin: 2px 8px;
+        color: rgba(255,255,255,0.45);
+      }
+      .nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+      .nav-item.active { background: rgba(37,99,235,0.2); color: #93b4fb; }
+      .nav-icon { font-size: 1rem; }
+      .nav-label { font-size: 0.85rem; text-transform: none; letter-spacing: 0; font-weight: 500; }
+
+      .page-content {
+        flex: 1;
+        max-width: 720px;
+        padding: 36px 32px;
+        margin: 0;
+      }
+
+      .toast {
+        bottom: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-bar">
+    <span class="app-name">⚙️ Configurações</span>
+  </header>
+
+  <main class="page-content">
+
+    <div class="page-title">Configurações</div>
+    <div class="page-subtitle">Gerencie sua conta e preferências do app</div>
+
+    <!-- Perfil -->
+    <div class="section-label">Conta</div>
+    <div class="config-card">
+      <div class="profile-header">
+        <div class="profile-avatar" id="profileAvatar">—</div>
+        <div class="profile-info">
+          <div class="profile-name" id="profileName">Carregando...</div>
+          <div class="profile-email" id="profileEmail">—</div>
+        </div>
+        <div class="profile-badge">Admin</div>
+      </div>
+
+      <div class="config-row">
+        <div class="config-row-left">
+          <div class="config-row-icon">✏️</div>
+          <div class="config-row-text">
+            <div class="config-row-title">Nome de exibição</div>
+            <div class="config-row-desc">Como você aparece no sistema</div>
+          </div>
+        </div>
+        <span class="config-row-value" id="displayName">—</span>
+      </div>
+
+      <div class="config-row">
+        <div class="config-row-left">
+          <div class="config-row-icon">📧</div>
+          <div class="config-row-text">
+            <div class="config-row-title">E-mail</div>
+            <div class="config-row-desc">Usado para login e notificações</div>
+          </div>
+        </div>
+        <span class="config-row-value" id="displayEmail">—</span>
+      </div>
+
+      <div class="config-row">
+        <div class="config-row-left">
+          <div class="config-row-icon">🔑</div>
+          <div class="config-row-text">
+            <div class="config-row-title">Senha</div>
+            <div class="config-row-desc">Última alteração desconhecida</div>
+          </div>
+        </div>
+        <button class="btn-inline" onclick="handleChangePassword()">Alterar</button>
+      </div>
+    </div>
+
+    <!-- Uso do App -->
+    <div class="section-label">Uso do App</div>
+    <div class="config-card">
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-value" id="statClients">—</div>
+          <div class="stat-label">Clientes</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="statPaid">—</div>
+          <div class="stat-label">Pagos</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="statPending">—</div>
+          <div class="stat-label">Pendentes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preferências -->
+    <div class="section-label">Preferências</div>
+    <div class="config-card">
+
+      <div class="config-row">
+        <div class="config-row-left">
+          <div class="config-row-icon">🔔</div>
+          <div class="config-row-text">
+            <div class="config-row-title">Alertas de garantia</div>
+            <div class="config-row-desc">Avisar quando uma garantia estiver vencendo</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleWarranty" checked onchange="savePrefs()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+
+      <div class="config-row">
+        <div class="config-row-left">
+          <div class="config-row-icon">💰</div>
+          <div class="config-row-text">
+            <div class="config-row-title">Destacar pagamentos pendentes</div>
+            <div class="config-row-desc">Realçar clientes com pagamento em aberto</div>
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="togglePending" checked onchange="savePrefs()">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+
+      <div class="config-row">
+        <div class="config-row-left">
+          <div class="config-row-icon">📅</div>
+          <div class="config-row-text">
+            <div class="config-row-title">Garantia padrão</div>
+            <div class="config-row-desc">Valor pré-preenchido ao cadastrar</div>
+          </div>
+        </div>
+        <select id="defaultWarranty" onchange="savePrefs()" style="
+          padding: 6px 10px;
+          border: 1.5px solid var(--border);
+          border-radius: var(--radius-sm);
+          background: var(--surface);
+          font-family: 'DM Sans', sans-serif;
+          font-size: 0.82rem;
+          color: var(--ink);
+          cursor: pointer;
+        ">
+          <option value="1">1 mês</option>
+          <option value="3" selected>3 meses</option>
+          <option value="6">6 meses</option>
+          <option value="12">12 meses</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Dados -->
+    <div class="section-label">Dados</div>
+    <div class="config-card">
+
+      <div class="config-row">
+        <div class="config-row-left">
+          <div class="config-row-icon">📤</div>
+          <div class="config-row-text">
+            <div class="config-row-title">Exportar dados</div>
+            <div class="config-row-desc">Baixar todos os clientes em JSON</div>
+          </div>
+        </div>
+        <button class="btn-inline" onclick="exportData()">Exportar</button>
+      </div>
+
+      <div class="config-row">
+        <div class="config-row-left">
+          <div class="config-row-icon">ℹ️</div>
+          <div class="config-row-text">
+            <div class="config-row-title">Versão do app</div>
+            <div class="config-row-desc">Gestão de Serviços</div>
+          </div>
+        </div>
+        <span class="config-row-value">v1.0.0</span>
+      </div>
+
+    </div>
+
+    <!-- Zona de perigo -->
+    <div class="section-label">Zona de Perigo</div>
+    <div class="config-card danger-card">
+
+      <div class="config-row">
+        <div class="config-row-left">
+          <div class="config-row-icon">🚪</div>
+          <div class="config-row-text">
+            <div class="config-row-title">Sair da conta</div>
+            <div class="config-row-desc">Encerrar sessão atual</div>
+          </div>
+        </div>
+        <button class="btn-inline danger" onclick="logout()">Sair</button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Nav (mobile: bottom bar / desktop: sidebar) -->
+  <nav class="bottom-nav">
+    <a href="/index.html" class="nav-item">
+  <span class="nav-icon">📝</span>
+  <span class="nav-label">Cadastro</span>
+</a>
+
+<a href="/clientes.html" class="nav-item">
+  <span class="nav-icon">👥</span>
+  <span class="nav-label">Clientes</span>
+</a>
+
+<a href="/relatorios.html" class="nav-item">
+  <span class="nav-icon">📊</span>
+  <span class="nav-label">Relatórios</span>
+</a>
+
+<a href="/configuracoes.html" class="nav-item active">
+  <span class="nav-icon">⚙️</span>
+  <span class="nav-label">Config</span>
+</a>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="/src/js/main.js"></script>
+  <script>
+    // ── Toast ──
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // ── Carregar dados do usuário (Firebase Auth) ──
+    // Estas funções serão chamadas pelo main.js quando o auth estiver pronto.
+    // Expõe funções globais para o main.js conectar.
+    window.loadUserProfile = function(user) {
+      if (!user) return;
+      const name  = user.displayName || user.email.split('@')[0];
+      const email = user.email || '—';
+      const initial = name.charAt(0).toUpperCase();
+
+      document.getElementById('profileAvatar').textContent = initial;
+      document.getElementById('profileName').textContent   = name;
+      document.getElementById('profileEmail').textContent  = email;
+      document.getElementById('displayName').textContent   = name;
+      document.getElementById('displayEmail').textContent  = email;
+    };
+
+    // ── Carregar estatísticas (chamado pelo main.js) ──
+    window.loadStats = function(clients) {
+      const total   = clients.length;
+      const paid    = clients.filter(c => c.paymentStatus === 'pago').length;
+      const pending = total - paid;
+      document.getElementById('statClients').textContent = total;
+      document.getElementById('statPaid').textContent    = paid;
+      document.getElementById('statPending').textContent = pending;
+    };
+
+    // ── Preferências (localStorage) ──
+    function loadPrefs() {
+      const prefs = JSON.parse(localStorage.getItem('app_prefs') || '{}');
+      if (prefs.warrantyAlert  !== undefined) document.getElementById('toggleWarranty').checked = prefs.warrantyAlert;
+      if (prefs.pendingAlert   !== undefined) document.getElementById('togglePending').checked  = prefs.pendingAlert;
+      if (prefs.defaultWarranty !== undefined) document.getElementById('defaultWarranty').value  = prefs.defaultWarranty;
+    }
+
+    window.savePrefs = function() {
+      const prefs = {
+        warrantyAlert:    document.getElementById('toggleWarranty').checked,
+        pendingAlert:     document.getElementById('togglePending').checked,
+        defaultWarranty:  document.getElementById('defaultWarranty').value,
+      };
+      localStorage.setItem('app_prefs', JSON.stringify(prefs));
+      showToast('✅ Preferências salvas');
+    };
+
+    // ── Alterar senha ──
+    window.handleChangePassword = function() {
+      showToast('📧 Link de redefinição enviado para seu e-mail');
+    };
+
+    // ── Exportar dados ──
+    window.exportData = function() {
+      const clients = JSON.parse(localStorage.getItem('clients') || '[]');
+      const blob = new Blob([JSON.stringify(clients, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `clientes_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      showToast('📤 Exportação iniciada');
+    };
+
+    loadPrefs();
+  </script>
+</body>
+</html>

@@ -1,16 +1,224 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Relatórios — Gestão de Serviços</title>
   <link rel="stylesheet" href="./src/css/style.css">
   <link rel="icon" href="/pwa-192x192.png">
+  <style>
+    :root {
+      --ink: #0f1117;
+      --ink-soft: #4a4e5a;
+      --ink-muted: #9095a1;
+      --surface: #f5f6f8;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --accent-glow: rgba(37, 99, 235, 0.15);
+      --accent-soft: #eff4ff;
+      --success: #059669;
+      --success-soft: #ecfdf5;
+      --danger: #dc2626;
+      --danger-soft: #fef2f2;
+      --warn: #d97706;
+      --border: #e8eaee;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --nav: 68px;
+      --header: 60px;
+      --sidebar-w: 240px;
+      --shadow-card: 0 2px 16px rgba(15, 17, 23, 0.08);
+      --shadow-btn: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* ════════════════════════════════
+       BASE (mobile)
+    ════════════════════════════════ */
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      min-height: 100vh;
+      padding-top: var(--header);
+      padding-bottom: calc(var(--nav) + 20px);
+    }
+
+    /* ── Header ── */
+
+
+    /* ── Page content ── */
+    .page-content {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 24px 16px 0;
+    }
+
+    /* ── Bottom nav (mobile) ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav);
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex;
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--ink-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding: 8px 0;
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+    }
+
+    .nav-icon {
+      font-size: 1.25rem;
+    }
+
+    .nav-label {
+      font-size: 0.62rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ════════════════════════════════
+       DESKTOP (min-width: 768px)
+    ════════════════════════════════ */
+    @media (min-width: 768px) {
+
+      body {
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-left: var(--sidebar-w);
+        display: flex;
+      }
+
+
+
+      /* ── Nav vira sidebar lateral ── */
+      .bottom-nav {
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: auto;
+        width: var(--sidebar-w);
+        height: 100vh;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 24px;
+        border-top: none;
+        border-right: 1px solid rgba(255, 255, 255, 0.07);
+        background: var(--ink);
+      }
+
+      .bottom-nav::before {
+        content: '🔧 Gestão de Serviços';
+        display: block;
+        font-weight: 800;
+        font-size: 0.88rem;
+        color: white;
+        padding: 0 20px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        margin-bottom: 12px;
+        letter-spacing: -0.3px;
+      }
+
+      .nav-item {
+        flex: none;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 12px 20px;
+        gap: 12px;
+        border-radius: 10px;
+        margin: 2px 8px;
+        color: rgba(255, 255, 255, 0.45);
+      }
+
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .nav-item.active {
+        background: rgba(37, 99, 235, 0.2);
+        color: #93b4fb;
+      }
+
+      .nav-icon {
+        font-size: 1rem;
+      }
+
+      .nav-label {
+        font-size: 0.85rem;
+        text-transform: none;
+        letter-spacing: 0;
+        font-weight: 500;
+      }
+
+      /* ── Conteúdo principal ── */
+      .page-content {
+        flex: 1;
+        max-width: 100%;
+        padding: 36px 32px;
+        margin: 0;
+        margin-top: 3em;
+      }
+
+      /* Grid de relatórios com mais colunas */
+      .reports-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      /* Card de largura total ocupa as 3 colunas */
+      .full-width {
+        grid-column: 1 / -1;
+      }
+
+      .app-name {
+        padding-top: 0.5em;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--ink);
+        letter-spacing: -0.5px;
+        margin-left: 10em;
+      }
+
+    }
+  </style>
 </head>
+
 <body>
+
+
   <header class="top-bar">
-    <span class="app-name">📊 Relatórios</span>
-    <button class="btn-logout" onclick="logout()">Sair</button>
+    <span class="app-name">Relatórios</span>
   </header>
 
   <main class="page-content">
@@ -80,6 +288,7 @@
     </div>
   </main>
 
+  <!-- Nav (mobile: bottom bar / desktop: sidebar) -->
   <nav class="bottom-nav">
     <a href="index.html" class="nav-item">
       <span class="nav-icon">📝</span>
@@ -89,12 +298,17 @@
       <span class="nav-icon">👥</span>
       <span class="nav-label">Clientes</span>
     </a>
-    <a href="relatorios.html" class="nav-item active">
+    <a href="relatorios.html" class="nav-item">
       <span class="nav-icon">📊</span>
       <span class="nav-label">Relatórios</span>
+    </a>
+    <a href="configuracoes.html" class="nav-item active">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Config</span>
     </a>
   </nav>
 
   <script type="module" src="./src/js/main.js"></script>
 </body>
+
 </html>

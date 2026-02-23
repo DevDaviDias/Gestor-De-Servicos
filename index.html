@@ -29,6 +29,7 @@
       --radius-sm: 10px;
       --nav: 68px;
       --header: 60px;
+      --sidebar-w: 240px;
       --shadow-card: 0 2px 16px rgba(15,17,23,0.08);
       --shadow-btn: 0 4px 14px rgba(37,99,235,0.35);
     }
@@ -36,6 +37,9 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-text-size-adjust: 100%; }
 
+    /* ════════════════════════════════
+       BASE (mobile)
+    ════════════════════════════════ */
     body {
       font-family: 'DM Sans', sans-serif;
       background: var(--surface);
@@ -46,45 +50,24 @@
     }
 
     /* ── Header ── */
-    .top-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: var(--header);
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
-      z-index: 100;
-    }
+    
+  
 
-    .app-name {
-      font-family:  sans-serif;
-      font-weight: 800;
-      font-size: 1.05rem;
-      color: var(--accent);
-      letter-spacing: -0.3px;
-    }
-
-    /* ── Page ── */
+    /* ── Page content ── */
     .page-content {
       max-width: 520px;
       margin: 0 auto;
       padding: 24px 16px 0;
     }
 
-    /* ── Step Header ── */
-    .step-header {
-      margin-bottom: 24px;
-    }
-
+    /* ── Step header ── */
+    .step-header { margin-bottom: 24px; }
     .step-indicator {
       display: flex;
       align-items: center;
       gap: 8px;
       margin-bottom: 12px;
     }
-
     .step-dot {
       width: 8px; height: 8px;
       border-radius: 50%;
@@ -97,7 +80,6 @@
       border-radius: 4px;
     }
     .step-dot.done { background: var(--success); }
-
     .step-label {
       font-family: 'Syne', sans-serif;
       font-size: 0.7rem;
@@ -107,9 +89,7 @@
       color: var(--accent);
       margin-bottom: 4px;
     }
-
     .step-title {
-      font-family:  sans-serif;
       font-size: 1.5rem;
       font-weight: 800;
       color: var(--ink);
@@ -119,10 +99,9 @@
     /* ── Steps ── */
     .step { display: none; animation: fadeSlide 0.3s ease; }
     .step.active { display: block; }
-
     @keyframes fadeSlide {
       from { opacity: 0; transform: translateX(16px); }
-      to { opacity: 1; transform: translateX(0); }
+      to   { opacity: 1; transform: translateX(0); }
     }
 
     /* ── Cards ── */
@@ -137,22 +116,19 @@
       border: 1px solid var(--border);
     }
 
-    /* ── Form Groups ── */
+    /* ── Form groups ── */
     .form-group { display: flex; flex-direction: column; gap: 7px; }
-
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
-
     label {
       font-size: 0.78rem;
       font-weight: 500;
       color: var(--ink-soft);
       letter-spacing: 0.1px;
     }
-
     input[type="text"],
     input[type="number"],
     input[type="date"],
@@ -169,17 +145,15 @@
       transition: all 0.2s;
       -webkit-appearance: none;
     }
-
     input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: var(--accent);
       background: var(--card);
       box-shadow: 0 0 0 4px var(--accent-glow);
     }
-
     textarea { resize: none; min-height: 90px; line-height: 1.5; }
 
-    /* ── Photo Upload ── */
+    /* ── Photo upload ── */
     .photo-upload-area {
       border: 2px dashed var(--border);
       border-radius: var(--radius-md);
@@ -199,17 +173,11 @@
       inset: 0;
       opacity: 0;
       cursor: pointer;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
     }
     .photo-icon { font-size: 2.2rem; margin-bottom: 8px; }
-    .photo-text {
-      font-size: 0.88rem;
-      color: var(--ink-soft);
-      line-height: 1.4;
-    }
+    .photo-text { font-size: 0.88rem; color: var(--ink-soft); line-height: 1.4; }
     .photo-text strong { color: var(--accent); }
-
     .photo-preview {
       border-radius: var(--radius-md);
       overflow: hidden;
@@ -217,15 +185,10 @@
       display: none;
     }
     .photo-preview.has-photo { display: block; }
-    .photo-preview img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
+    .photo-preview img { width: 100%; height: 200px; object-fit: cover; }
 
     /* ── Parts ── */
     .parts-list { display: flex; flex-direction: column; gap: 10px; }
-
     .part-item {
       display: grid;
       grid-template-columns: 1fr 100px 36px;
@@ -236,13 +199,7 @@
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
     }
-
-    .part-item input {
-      background: var(--card);
-      padding: 9px 12px;
-      font-size: 0.88rem;
-    }
-
+    .part-item input { background: var(--card); padding: 9px 12px; font-size: 0.88rem; }
     .btn-remove-part {
       width: 36px; height: 36px;
       border-radius: 8px;
@@ -258,7 +215,6 @@
       transition: background 0.2s;
     }
     .btn-remove-part:hover { background: #fecaca; }
-
     .btn-add-part {
       width: 100%;
       padding: 11px;
@@ -275,23 +231,16 @@
     }
     .btn-add-part:hover { background: var(--accent-soft); }
 
-    /* ── Payment Toggle ── */
+    /* ── Payment toggle ── */
     .payment-toggle {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
-
-    .toggle-option {
-      position: relative;
-    }
-
+    .toggle-option { position: relative; }
     .toggle-option input[type="radio"] {
-      position: absolute;
-      opacity: 0;
-      width: 0; height: 0;
+      position: absolute; opacity: 0; width: 0; height: 0;
     }
-
     .toggle-label {
       display: flex;
       align-items: center;
@@ -307,27 +256,24 @@
       transition: all 0.2s;
       color: var(--ink-soft);
     }
-
     .toggle-option input:checked + .toggle-label {
       border-color: var(--success);
       background: var(--success-soft);
       color: var(--success);
     }
-
     .toggle-option input:checked + .toggle-label.pending-label {
       border-color: var(--warn);
       background: #fffbeb;
       color: var(--warn);
     }
 
-    /* ── Summary Card ── */
+    /* ── Summary card ── */
     .summary-card {
       background: var(--ink);
       border-radius: var(--radius-lg);
       padding: 20px;
       color: white;
     }
-
     .summary-title {
       font-family: 'Syne', sans-serif;
       font-size: 0.7rem;
@@ -337,7 +283,6 @@
       opacity: 0.5;
       margin-bottom: 16px;
     }
-
     .summary-row {
       display: flex;
       justify-content: space-between;
@@ -373,7 +318,6 @@
     .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
     .btn-primary:active { transform: translateY(0); }
     .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
     .btn-secondary {
       width: 100%;
       padding: 14px;
@@ -388,7 +332,6 @@
       transition: all 0.2s;
     }
     .btn-secondary:hover { background: var(--border); }
-
     .btn-row {
       display: grid;
       grid-template-columns: 1fr 2fr;
@@ -409,9 +352,9 @@
     }
     .alert.show { display: flex; }
     .alert-success { background: var(--success-soft); color: var(--success); }
-    .alert-error { background: var(--danger-soft); color: var(--danger); }
+    .alert-error   { background: var(--danger-soft);  color: var(--danger); }
 
-    /* ── Bottom Nav ── */
+    /* ── Bottom nav (mobile) ── */
     .bottom-nav {
       position: fixed;
       bottom: 0; left: 0; right: 0;
@@ -421,7 +364,6 @@
       display: flex;
       z-index: 100;
     }
-
     .nav-item {
       flex: 1;
       display: flex;
@@ -453,9 +395,138 @@
       display: none;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+
+    /* ════════════════════════════════
+       DESKTOP  (min-width: 768px)
+    ════════════════════════════════ */
+    @media (min-width: 768px) {
+
+      /* body vira flex e perde os paddings do mobile */
+      body {
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-left: var(--sidebar-w);
+        display: flex;
+      }
+
+      /* top-bar some — a nav lateral faz esse papel */
+      .top-bar { display: none; }
+
+      /* ── Nav vira sidebar lateral ── */
+      .bottom-nav {
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: auto;
+        width: var(--sidebar-w);
+        height: 100vh;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding-top: 24px;
+        border-top: none;
+        border-right: 1px solid rgba(255,255,255,0.07);
+        background: var(--ink);
+      }
+
+      /* logo no topo da sidebar */
+      .bottom-nav::before {
+        content: '🔧 Gestão de Serviços';
+        display: block;
+        font-weight: 800;
+        font-size: 0.88rem;
+        color: white;
+        padding: 0 20px 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        margin-bottom: 12px;
+        letter-spacing: -0.3px;
+      }
+
+      /* itens da nav na vertical */
+      .nav-item {
+        flex: none;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 12px 20px;
+        gap: 12px;
+        border-radius: 10px;
+        margin: 2px 8px;
+        color: rgba(255,255,255,0.45);
+      }
+      .nav-item:hover {
+        background: rgba(255,255,255,0.06);
+        color: rgba(255,255,255,0.85);
+      }
+      .nav-item.active {
+        background: rgba(37,99,235,0.2);
+        color: #93b4fb;
+      }
+      .nav-icon { font-size: 1rem; }
+      .nav-label {
+        font-size: 0.85rem;
+        text-transform: none;
+        letter-spacing: 0;
+        font-weight: 500;
+      }
+
+      /* ── Conteúdo principal ── */
+      .page-content {
+        flex: 1;
+        max-width: 100%;
+        padding: 36px 32px;
+        margin: 0;
+      }
+
+      /* ── Step header some — desktop mostra tudo ── */
+      .step-header { display: block; }
+      .step-label{ display: none; }
+
+      /* ── Todos os steps aparecem de uma vez ── */
+      .step          { display: block !important; animation: none; }
+      .step + .step  { margin-top: 20px; }
+
+      /* ── Botões de navegação entre steps somem ── */
+      .btn-row { display: none; }
+
+      /* ── Layout: form à esquerda, resumo à direita ── */
+      form {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 24px;
+        align-items: start;
+      }
+
+      #step1 { grid-column: 1; grid-row: 1; }
+      #step2 { grid-column: 1; grid-row: 2; }
+
+      /* step3 = coluna do resumo, fica fixo */
+      #step3 {
+        grid-column: 2;
+        grid-row: 1 / 4;
+        position: sticky;
+        top: 36px;
+      }
+
+  
+
+      #step3 .btn-row {
+        display: flex;
+        flex-direction: column;
+        margin-top: 4px;
+      }
+      #step3 .btn-secondary { display: none; }
+      #step3 .btn-primary   { width: 100%; }
+
+      /* ── Campos em 3 colunas no desktop ── */
+      .form-row {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Top bar (mobile only) -->
   <header class="top-bar">
     <span class="app-name">🔧 Gestão de Serviços</span>
   </header>
@@ -468,7 +539,7 @@
       ❌ Erro ao cadastrar. Tente novamente.
     </div>
 
-    <!-- Step Indicator -->
+    <!-- Step indicator (mobile only) -->
     <div class="step-header">
       <div class="step-indicator">
         <div class="step-dot active" id="dot1"></div>
@@ -521,9 +592,7 @@
 
           <div class="btn-row">
             <div></div>
-            <button type="button" class="btn-primary" onclick="goToStep(2)">
-              Próximo →
-            </button>
+            <button type="button" class="btn-primary" onclick="goToStep(2)">Próximo →</button>
           </div>
         </div>
       </div>
@@ -550,7 +619,7 @@
 
           <div class="btn-row">
             <button type="button" class="btn-secondary" onclick="goToStep(1)">← Voltar</button>
-            <button type="button" class="btn-primary" onclick="goToStep(3)">Próximo →</button>
+            <button type="button" class="btn-primary"   onclick="goToStep(3)">Próximo →</button>
           </div>
         </div>
       </div>
@@ -577,26 +646,11 @@
           <!-- Resumo -->
           <div class="summary-card" id="summaryCard">
             <div class="summary-title">Resumo do Serviço</div>
-            <div class="summary-row">
-              <span>Cliente</span>
-              <span id="sumName">—</span>
-            </div>
-            <div class="summary-row">
-              <span>Data</span>
-              <span id="sumDate">—</span>
-            </div>
-            <div class="summary-row">
-              <span>Valor</span>
-              <span id="sumValue">—</span>
-            </div>
-            <div class="summary-row">
-              <span>Garantia</span>
-              <span id="sumWarranty">—</span>
-            </div>
-            <div class="summary-row">
-              <span>Pagamento</span>
-              <span id="sumStatus">—</span>
-            </div>
+            <div class="summary-row"><span>Cliente</span>   <span id="sumName">—</span></div>
+            <div class="summary-row"><span>Data</span>      <span id="sumDate">—</span></div>
+            <div class="summary-row"><span>Valor</span>     <span id="sumValue">—</span></div>
+            <div class="summary-row"><span>Garantia</span>  <span id="sumWarranty">—</span></div>
+            <div class="summary-row"><span>Pagamento</span> <span id="sumStatus">—</span></div>
           </div>
 
           <div class="btn-row">
@@ -612,8 +666,9 @@
     </form>
   </main>
 
-  <nav class="bottom-nav">
-    <a href="index.html" class="nav-item active">
+  <!-- Nav (mobile: bottom bar / desktop: sidebar) -->
+   <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
       <span class="nav-icon">📝</span>
       <span class="nav-label">Cadastro</span>
     </a>
@@ -625,19 +680,26 @@
       <span class="nav-icon">📊</span>
       <span class="nav-label">Relatórios</span>
     </a>
+    <a href="configuracoes.html" class="nav-item active">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Config</span>
+    </a>
   </nav>
 
   <script>
-    // ── Step Navigation ──
-    const steps = ['step1','step2','step3'];
-    const dots = ['dot1','dot2','dot3'];
+    // ── Step Navigation (mobile) ──
+    const steps  = ['step1','step2','step3'];
+    const dots   = ['dot1','dot2','dot3'];
     const labels = ['Cliente & Serviço','Peças & Observações','Foto & Confirmar'];
 
+    function isDesktop() { return window.innerWidth >= 768; }
+
     function goToStep(n) {
+      if (isDesktop()) return; // no desktop não há navegação por steps
+
       if (n === 2) {
-        // validate step 1
-        const name = document.getElementById('clientName').value.trim();
-        const date = document.getElementById('serviceDate').value;
+        const name  = document.getElementById('clientName').value.trim();
+        const date  = document.getElementById('serviceDate').value;
         const value = document.getElementById('serviceValue').value;
         if (!name || !date || !value) {
           document.getElementById('clientName').focus();
@@ -650,38 +712,45 @@
         document.getElementById(s).classList.toggle('active', i === n - 1);
         const dot = document.getElementById(dots[i]);
         dot.classList.remove('active','done');
-        if (i === n - 1) dot.classList.add('active');
-        else if (i < n - 1) dot.classList.add('done');
+        if (i === n - 1)  dot.classList.add('active');
+        else if (i < n-1) dot.classList.add('done');
       });
 
       document.getElementById('stepLabel').textContent = `Passo ${n} de 3`;
-      document.getElementById('stepTitle').textContent = labels[n - 1];
+      document.getElementById('stepTitle').textContent  = labels[n - 1];
       window.scrollTo(0, 0);
     }
 
     function updateSummary() {
-      const fmt = (v) => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v);
-      const fmtDate = (d) => new Date(d+'T12:00:00').toLocaleDateString('pt-BR');
-      document.getElementById('sumName').textContent = document.getElementById('clientName').value || '—';
-      document.getElementById('sumDate').textContent = fmtDate(document.getElementById('serviceDate').value);
-      document.getElementById('sumValue').textContent = fmt(document.getElementById('serviceValue').value || 0);
+      const fmt     = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v);
+      const fmtDate = d => new Date(d+'T12:00:00').toLocaleDateString('pt-BR');
+      document.getElementById('sumName').textContent     = document.getElementById('clientName').value || '—';
+      document.getElementById('sumDate').textContent     = fmtDate(document.getElementById('serviceDate').value);
+      document.getElementById('sumValue').textContent    = fmt(document.getElementById('serviceValue').value || 0);
       const w = document.getElementById('warranty').value;
       document.getElementById('sumWarranty').textContent = `${w} ${w == 1 ? 'mês' : 'meses'}`;
       const paid = document.querySelector('input[name="paymentStatus"]:checked').value === 'pago';
-      document.getElementById('sumStatus').textContent = paid ? '✅ Pago' : '⏳ Pendente';
+      document.getElementById('sumStatus').textContent   = paid ? '✅ Pago' : '⏳ Pendente';
     }
 
+    // No desktop atualiza o resumo em tempo real
+    ['clientName','serviceDate','serviceValue','warranty'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => { if (isDesktop()) updateSummary(); });
+    });
+    document.querySelectorAll('input[name="paymentStatus"]').forEach(el => {
+      el.addEventListener('change', () => { if (isDesktop()) updateSummary(); });
+    });
+
     // ── Photo Preview ──
-    document.getElementById('servicePhoto').addEventListener('change', (e) => {
+    document.getElementById('servicePhoto').addEventListener('change', e => {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = (ev) => {
-  const photoImg = document.getElementById('photoImg');
-  if (photoImg) photoImg.src = ev.target.result;
-  document.getElementById('photoPreview').classList.add('has-photo');
-  document.getElementById('photoUploadArea').style.display = 'none';
-};
+      reader.onload = ev => {
+        document.getElementById('photoImg').src = ev.target.result;
+        document.getElementById('photoPreview').classList.add('has-photo');
+        document.getElementById('photoUploadArea').style.display = 'none';
+      };
       reader.readAsDataURL(file);
     });
 
@@ -690,7 +759,7 @@
       const item = document.createElement('div');
       item.className = 'part-item';
       item.innerHTML = `
-        <input type="text" placeholder="Nome da peça" class="part-name">
+        <input type="text"   placeholder="Nome da peça" class="part-name">
         <input type="number" placeholder="R$ 0,00" class="part-cost" step="0.01" min="0">
         <button type="button" class="btn-remove-part" aria-label="Remover">✕</button>
       `;
@@ -698,24 +767,20 @@
       document.getElementById('partsContainer').appendChild(item);
     });
 
-    document.getElementById('partsContainer').addEventListener('click', (e) => {
-      if (e.target.classList.contains('btn-remove-part')) {
+    document.getElementById('partsContainer').addEventListener('click', e => {
+      if (e.target.classList.contains('btn-remove-part'))
         e.target.closest('.part-item').remove();
-      }
     });
 
     // ── Loading state ──
-    window.setLoading = (show) => {
-      const btn = document.getElementById('submitBtn');
-      const text = document.getElementById('submitText');
-      const spin = document.getElementById('loadingSpinner');
-      btn.disabled = show;
-      text.style.display = show ? 'none' : 'inline';
-      spin.style.display = show ? 'inline-block' : 'none';
+    window.setLoading = show => {
+      document.getElementById('submitBtn').disabled        = show;
+      document.getElementById('submitText').style.display  = show ? 'none' : 'inline';
+      document.getElementById('loadingSpinner').style.display = show ? 'inline-block' : 'none';
     };
 
     // ── Alerts ──
-    window.showAlert = (id) => {
+    window.showAlert = id => {
       const el = document.getElementById(id);
       el.classList.add('show');
       setTimeout(() => el.classList.remove('show'), 3500);
