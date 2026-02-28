@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Criar Conta — Gestão de Serviços</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="./src/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="icon" href="/pwa-192x192.png">
   <style>
     :root {
@@ -19,266 +15,224 @@
       --surface: #f5f6f8;
       --card: #ffffff;
       --accent: #2563eb;
-      --accent-glow: rgba(37, 99, 235, 0.15);
-      --accent-soft: #eff4ff;
+      --accent-glow: rgba(37,99,235,0.14);
       --success: #059669;
       --danger: #dc2626;
       --danger-soft: #fef2f2;
+      --warn: #d97706;
       --border: #e8eaee;
-      --radius-lg: 20px;
+      --radius-lg: 22px;
       --radius-md: 14px;
       --radius-sm: 10px;
-      --shadow-card: 0 2px 16px rgba(15, 17, 23, 0.08);
-      --shadow-btn: 0 4px 14px rgba(37, 99, 235, 0.35);
+      --shadow-card: 0 4px 24px rgba(15,17,23,0.09);
+      --shadow-btn: 0 4px 16px rgba(37,99,235,0.32);
     }
-
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      -webkit-text-size-adjust: 100%;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 60%, #3b82f6 100%);
+      background: var(--surface);
+      color: var(--ink);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px 16px;
-    }
-
-    .auth-container {
-      width: 100%;
-      max-width: 400px;
+      padding: 32px 16px;
     }
 
     .auth-card {
+      width: 100%;
+      max-width: 400px;
       background: var(--card);
       border-radius: var(--radius-lg);
-      padding: 32px 28px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      padding: 36px 32px 32px;
     }
 
-    .auth-logo {
-      font-size: 2.5rem;
-      text-align: center;
-      margin-bottom: 8px;
-    }
-
-    .auth-title {
-      font-family: sans-serif;
-      font-size: 1.8rem;
-      color: var(--ink);
-      text-align: center;
-      margin-bottom: 4px;
-    }
-
-    .auth-subtitle {
-      font-size: 0.88rem;
-      color: var(--ink-muted);
-      text-align: center;
+    /* ── Cabeçalho ── */
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
       margin-bottom: 28px;
     }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      margin-bottom: 14px;
+    .card-icon {
+      width: 48px; height: 48px;
+      background: var(--ink);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .card-title {
+      font-family: sans-serif;
+       font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.4px;
+      line-height: 1.2;
+    }
+    .card-subtitle {
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+      margin-top: 3px;
     }
 
-    label {
-      font-size: 0.78rem;
-      font-weight: 500;
-      color: var(--ink-soft);
-      text-align: left;
-    }
-
+    /* ── Campos ── */
+    .fields { display: flex; flex-direction: column; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 0.78rem; font-weight: 500; color: var(--ink-soft); }
     input {
       width: 100%;
-      padding: 12px 14px;
+      padding: 11px 13px;
       border: 1.5px solid var(--border);
       border-radius: var(--radius-sm);
       font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
+      font-size: 0.93rem;
       color: var(--ink);
       background: var(--surface);
-      transition: all 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
       -webkit-appearance: none;
     }
-
     input:focus {
       outline: none;
       border-color: var(--accent);
       background: var(--card);
-      box-shadow: 0 0 0 4px var(--accent-glow);
+      box-shadow: 0 0 0 3px var(--accent-glow);
     }
+    input::placeholder { color: var(--ink-muted); }
 
+    /* ── Força da senha ── */
+    .strength-bar { height: 3px; border-radius: 2px; background: var(--border); margin-top: 5px; overflow: hidden; }
+    .strength-fill { height: 100%; border-radius: 2px; width: 0%; transition: width 0.3s, background 0.3s; }
+    .password-hint { font-size: 0.73rem; margin-top: 3px; color: var(--ink-muted); min-height: 1em; }
+
+    /* ── Erro ── */
     .error-msg {
+      padding: 11px 13px;
       background: var(--danger-soft);
       color: var(--danger);
-      padding: 12px 14px;
       border-radius: var(--radius-sm);
-      font-size: 0.85rem;
+      font-size: 0.83rem;
+      font-weight: 500;
       display: none;
-      margin-bottom: 14px;
     }
 
+    /* ── Botão ── */
     .btn-primary {
       width: 100%;
-      padding: 12px 14px;
+      padding: 13px;
       background: var(--accent);
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 600;
+      color: white;
       border: none;
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-md);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
       cursor: pointer;
       box-shadow: var(--shadow-btn);
-      transition: all 0.2s;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .auth-footer {
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--ink-muted);
-    }
-
-    .auth-footer a {
-      color: var(--accent);
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .password-hint {
-      font-size: 0.75rem;
-      color: var(--ink-muted);
+      transition: transform 0.18s, box-shadow 0.18s;
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px;
       margin-top: 4px;
     }
+    .btn-primary:hover  { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.38); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-    .strength-bar {
-      height: 4px;
-      border-radius: 2px;
-      background: var(--border);
-      margin-top: 6px;
-      overflow: hidden;
+    .spinner-sm {
+      width: 17px; height: 17px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
     }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .strength-fill {
-      height: 100%;
-      border-radius: 2px;
-      width: 0%;
-      transition: all 0.3s;
-      
-    }
+    .divider { height: 1px; background: var(--border); margin: 22px 0 18px; }
 
-    .auth-footer {
-      margin-top: 16px;
-      font-size: 0.9rem;
-      color: var(--gray-600);
-    }
-
-    .auth-footer-link {
-      color: var(--blue);
-      font-weight: 600;
-      transition: color 0.2s;
-    }
+    .auth-footer { text-align: center; font-size: 0.84rem; color: var(--ink-muted); }
+    .auth-footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .auth-footer a:hover { text-decoration: underline; }
   </style>
 </head>
-
 <body>
-  <div class="auth-container">
-    <div class="auth-card">
-      <div class="auth-logo">🔧</div>
-      <h1 class="auth-title">Criar Conta</h1>
-      <p class="auth-subtitle">Comece a gerenciar seus serviços agora</p>
+
+  <div class="auth-card">
+
+    <div class="card-head">
+      <div class="card-icon">🔧</div>
+      <div>
+        <div class="card-title">Criar conta</div>
+        <div class="card-subtitle">Gestão de Serviços</div>
+      </div>
+    </div>
+
+    <form id="registerForm" class="fields">
+
+      <div class="form-group">
+        <label for="name">Seu nome</label>
+        <input type="text" id="name" placeholder="Ex: João Silva" required autocomplete="name">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="seu@email.com" required autocomplete="email">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="Mínimo 6 caracteres" required autocomplete="new-password">
+        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+        <span class="password-hint" id="strengthLabel"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar senha</label>
+        <input type="password" id="confirmPassword" placeholder="Repita a senha" required autocomplete="new-password">
+      </div>
 
       <div id="errorMsg" class="error-msg"></div>
 
-      <form id="registerForm">
-        <div class="form-group">
-          <label for="name">Seu Nome</label>
-          <input type="text" id="name" placeholder="Ex: João Silva" required autocomplete="name">
-        </div>
+      <button type="submit" id="submitBtn" class="btn-primary">
+        <span id="submitText">Criar conta</span>
+        <span class="spinner-sm" id="loadingSpinner"></span>
+      </button>
 
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="seu@email.com" required autocomplete="email">
-        </div>
+    </form>
 
-        <div class="form-group">
-          <label for="password">Senha</label>
-          <input type="password" id="password" placeholder="Mínimo 6 caracteres" required autocomplete="new-password">
-          <div class="strength-bar">
-            <div class="strength-fill" id="strengthFill"></div>
-          </div>
-          <span class="password-hint" id="strengthLabel"></span>
-        </div>
+    <div class="divider"></div>
+    <div class="auth-footer">Já tem conta? <a href="login.html">Fazer login</a></div>
 
-        <div class="form-group">
-          <label for="confirmPassword">Confirmar Senha</label>
-          <input type="password" id="confirmPassword" placeholder="Repita a senha" required autocomplete="new-password">
-        </div>
-
-        <button class="btn-primary" type="submit" id="submitBtn">Criar Conta</button>
-      </form>
-
-      <div class="auth-footer">
-        Já tem conta? <a href="login.html">Entrar</a>
-      </div>
-    </div>
   </div>
 
   <script>
-    // Password strength indicator
     document.getElementById('password').addEventListener('input', (e) => {
       const val = e.target.value;
-      const fill = document.getElementById('strengthFill');
+      const fill  = document.getElementById('strengthFill');
       const label = document.getElementById('strengthLabel');
-
-      if (val.length === 0) { fill.style.width = '0%'; label.textContent = ''; return; }
-
-      let strength = 0;
-      if (val.length >= 6) strength++;
-      if (val.length >= 10) strength++;
-      if (/[A-Z]/.test(val)) strength++;
-      if (/[0-9]/.test(val)) strength++;
-      if (/[^A-Za-z0-9]/.test(val)) strength++;
-
+      if (!val) { fill.style.width = '0%'; label.textContent = ''; return; }
+      let s = 0;
+      if (val.length >= 6)          s++;
+      if (val.length >= 10)         s++;
+      if (/[A-Z]/.test(val))        s++;
+      if (/[0-9]/.test(val))        s++;
+      if (/[^A-Za-z0-9]/.test(val)) s++;
       const levels = [
-        { w: '20%', color: '#dc2626', text: 'Muito fraca' },
-        { w: '40%', color: '#d97706', text: 'Fraca' },
-        { w: '60%', color: '#d97706', text: 'Média' },
-        { w: '80%', color: '#059669', text: 'Forte' },
-        { w: '100%', color: '#059669', text: 'Muito forte' },
+        { w:'20%',  c:'#dc2626', t:'Muito fraca' },
+        { w:'40%',  c:'#d97706', t:'Fraca' },
+        { w:'60%',  c:'#d97706', t:'Média' },
+        { w:'80%',  c:'#059669', t:'Forte' },
+        { w:'100%', c:'#059669', t:'Muito forte' },
       ];
-
-      const level = levels[Math.min(strength - 1, 4)];
-      fill.style.width = level.w;
-      fill.style.background = level.color;
-      label.textContent = level.text;
-      label.style.color = level.color;
+      const l = levels[Math.min(s - 1, 4)];
+      fill.style.width = l.w; fill.style.background = l.c;
+      label.textContent = l.t; label.style.color = l.c;
     });
   </script>
-
   <script type="module" src="./src/js/main.js"></script>
 </body>
-
 </html>

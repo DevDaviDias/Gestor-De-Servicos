@@ -29,7 +29,6 @@
       --radius-sm: 10px;
       --nav: 68px;
       --header: 60px;
-      --sidebar-w: 240px;
       --shadow-card: 0 2px 16px rgba(15,17,23,0.08);
       --shadow-btn: 0 4px 14px rgba(37,99,235,0.35);
     }
@@ -37,6 +36,9 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-text-size-adjust: 100%; }
 
+    /* ════════════════════════════════
+       BASE — igual em todos os tamanhos
+    ════════════════════════════════ */
     body {
       font-family: 'DM Sans', sans-serif;
       background: var(--surface);
@@ -46,6 +48,7 @@
       padding-bottom: calc(var(--nav) + 20px);
     }
 
+    /* ── Header ── */
     .top-bar {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -60,14 +63,19 @@
     .app-name {
       font-weight: 800;
       font-size: 1.05rem;
-      color: var(--accent);
+      color: var(--ink);
       letter-spacing: -0.3px;
     }
 
+    /* ── Page content ── */
     .page-content {
       max-width: 520px;
       margin: 0 auto;
       padding: 24px 16px 0;
+    }
+
+    @media (min-width: 768px) {
+      .page-content { max-width: 680px; }
     }
 
     /* ── Page title ── */
@@ -126,7 +134,6 @@
       color: white;
       flex-shrink: 0;
     }
-    .profile-info {}
     .profile-name {
       font-family: 'Syne', sans-serif;
       font-size: 1rem;
@@ -162,7 +169,6 @@
       gap: 12px;
     }
     .config-row:last-child { border-bottom: none; }
-
     .config-row-left {
       display: flex;
       align-items: center;
@@ -181,7 +187,6 @@
       font-size: 0.95rem;
       flex-shrink: 0;
     }
-    .config-row-text {}
     .config-row-title {
       font-size: 0.9rem;
       font-weight: 600;
@@ -206,13 +211,11 @@
     /* ── Toggle switch ── */
     .toggle-switch {
       position: relative;
-      width: 42px;
-      height: 24px;
+      width: 42px; height: 24px;
       flex-shrink: 0;
     }
     .toggle-switch input {
-      opacity: 0;
-      width: 0; height: 0;
+      opacity: 0; width: 0; height: 0;
       position: absolute;
     }
     .toggle-track {
@@ -236,7 +239,7 @@
     .toggle-switch input:checked + .toggle-track { background: var(--success); }
     .toggle-switch input:checked + .toggle-track::after { transform: translateX(18px); }
 
-    /* ── Botão de ação inline ── */
+    /* ── Botão inline ── */
     .btn-inline {
       padding: 7px 14px;
       border-radius: var(--radius-sm);
@@ -258,11 +261,10 @@
     }
     .btn-inline.danger:hover { background: #fecaca; }
 
-    /* ── Stat row (uso do app) ── */
+    /* ── Stats ── */
     .stats-row {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 0;
     }
     .stat-item {
       padding: 16px 12px;
@@ -293,16 +295,25 @@
       border-color: rgba(220,38,38,0.15);
     }
 
-    /* ── Bottom nav ── */
+    /* ── Bottom nav — sempre fixo embaixo ── */
     .bottom-nav {
       position: fixed;
       bottom: 0; left: 0; right: 0;
+      top: auto;
+      width: 100%;
       height: var(--nav);
       background: var(--card);
       border-top: 1px solid var(--border);
+      border-right: none;
       display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: stretch;
       z-index: 100;
+      padding-top: 0;
     }
+    .bottom-nav::before { display: none; }
+
     .nav-item {
       flex: 1;
       display: flex;
@@ -314,17 +325,22 @@
       text-decoration: none;
       transition: color 0.2s;
       padding: 8px 0;
+      background: transparent;
+      border-radius: 0;
+      margin: 0;
     }
-    .nav-item.active { color: var(--accent); }
+    .nav-item:hover { color: var(--accent); background: transparent; }
+    .nav-item.active { color: var(--accent); background: transparent; }
     .nav-icon { font-size: 1.25rem; }
     .nav-label {
       font-size: 0.62rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      color: inherit;
     }
 
-    /* ── Alert toast ── */
+    /* ── Toast ── */
     .toast {
       position: fixed;
       bottom: calc(var(--nav) + 12px);
@@ -346,69 +362,6 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
-
-    /* ════════════════════════════════
-       DESKTOP (min-width: 768px)
-    ════════════════════════════════ */
-    @media (min-width: 768px) {
-
-      body {
-        padding-top: 0;
-        padding-bottom: 0;
-        padding-left: var(--sidebar-w);
-        display: flex;
-      }
-
-      .top-bar { display: none; }
-
-      .bottom-nav {
-        top: 0; left: 0; bottom: 0; right: auto;
-        width: var(--sidebar-w);
-        height: 100vh;
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 24px;
-        border-top: none;
-        border-right: 1px solid rgba(255,255,255,0.07);
-        background: var(--ink);
-      }
-      .bottom-nav::before {
-        content: '🔧 Gestão de Serviços';
-        display: block;
-        font-weight: 800;
-        font-size: 0.88rem;
-        color: white;
-        padding: 0 20px 20px;
-        border-bottom: 1px solid rgba(255,255,255,0.07);
-        margin-bottom: 12px;
-        letter-spacing: -0.3px;
-      }
-      .nav-item {
-        flex: none;
-        flex-direction: row;
-        justify-content: flex-start;
-        padding: 12px 20px;
-        gap: 12px;
-        border-radius: 10px;
-        margin: 2px 8px;
-        color: rgba(255,255,255,0.45);
-      }
-      .nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
-      .nav-item.active { background: rgba(37,99,235,0.2); color: #93b4fb; }
-      .nav-icon { font-size: 1rem; }
-      .nav-label { font-size: 0.85rem; text-transform: none; letter-spacing: 0; font-weight: 500; }
-
-      .page-content {
-        flex: 1;
-        max-width: 720px;
-        padding: 36px 32px;
-        margin: 0;
-      }
-
-      .toast {
-        bottom: 24px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -422,7 +375,7 @@
     <div class="page-title">Configurações</div>
     <div class="page-subtitle">Gerencie sua conta e preferências do app</div>
 
-    <!-- Perfil -->
+    <!-- Conta -->
     <div class="section-label">Conta</div>
     <div class="config-card">
       <div class="profile-header">
@@ -577,7 +530,6 @@
     <!-- Zona de perigo -->
     <div class="section-label">Zona de Perigo</div>
     <div class="config-card danger-card">
-
       <div class="config-row">
         <div class="config-row-left">
           <div class="config-row-icon">🚪</div>
@@ -588,39 +540,34 @@
         </div>
         <button class="btn-inline danger" onclick="logout()">Sair</button>
       </div>
-
     </div>
 
   </main>
 
-  <!-- Nav (mobile: bottom bar / desktop: sidebar) -->
+  <!-- Nav — sempre embaixo -->
   <nav class="bottom-nav">
     <a href="/index.html" class="nav-item">
-  <span class="nav-icon">📝</span>
-  <span class="nav-label">Cadastro</span>
-</a>
-
-<a href="/clientes.html" class="nav-item">
-  <span class="nav-icon">👥</span>
-  <span class="nav-label">Clientes</span>
-</a>
-
-<a href="/relatorios.html" class="nav-item">
-  <span class="nav-icon">📊</span>
-  <span class="nav-label">Relatórios</span>
-</a>
-
-<a href="/configuracoes.html" class="nav-item active">
-  <span class="nav-icon">⚙️</span>
-  <span class="nav-label">Config</span>
-</a>
+      <span class="nav-icon">📝</span>
+      <span class="nav-label">Cadastro</span>
+    </a>
+    <a href="/clientes.html" class="nav-item">
+      <span class="nav-icon">👥</span>
+      <span class="nav-label">Clientes</span>
+    </a>
+    <a href="/relatorios.html" class="nav-item">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Relatórios</span>
+    </a>
+    <a href="/configuracoes.html" class="nav-item active">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Config</span>
+    </a>
   </nav>
 
   <div class="toast" id="toast"></div>
 
   <script type="module" src="/src/js/main.js"></script>
   <script>
-    // ── Toast ──
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -628,56 +575,45 @@
       setTimeout(() => t.classList.remove('show'), 2500);
     }
 
-    // ── Carregar dados do usuário (Firebase Auth) ──
-    // Estas funções serão chamadas pelo main.js quando o auth estiver pronto.
-    // Expõe funções globais para o main.js conectar.
     window.loadUserProfile = function(user) {
       if (!user) return;
       const name  = user.displayName || user.email.split('@')[0];
       const email = user.email || '—';
-      const initial = name.charAt(0).toUpperCase();
-
-      document.getElementById('profileAvatar').textContent = initial;
+      document.getElementById('profileAvatar').textContent = name.charAt(0).toUpperCase();
       document.getElementById('profileName').textContent   = name;
       document.getElementById('profileEmail').textContent  = email;
       document.getElementById('displayName').textContent   = name;
       document.getElementById('displayEmail').textContent  = email;
     };
 
-    // ── Carregar estatísticas (chamado pelo main.js) ──
     window.loadStats = function(clients) {
       const total   = clients.length;
       const paid    = clients.filter(c => c.paymentStatus === 'pago').length;
-      const pending = total - paid;
       document.getElementById('statClients').textContent = total;
       document.getElementById('statPaid').textContent    = paid;
-      document.getElementById('statPending').textContent = pending;
+      document.getElementById('statPending').textContent = total - paid;
     };
 
-    // ── Preferências (localStorage) ──
     function loadPrefs() {
       const prefs = JSON.parse(localStorage.getItem('app_prefs') || '{}');
-      if (prefs.warrantyAlert  !== undefined) document.getElementById('toggleWarranty').checked = prefs.warrantyAlert;
-      if (prefs.pendingAlert   !== undefined) document.getElementById('togglePending').checked  = prefs.pendingAlert;
+      if (prefs.warrantyAlert   !== undefined) document.getElementById('toggleWarranty').checked = prefs.warrantyAlert;
+      if (prefs.pendingAlert    !== undefined) document.getElementById('togglePending').checked  = prefs.pendingAlert;
       if (prefs.defaultWarranty !== undefined) document.getElementById('defaultWarranty').value  = prefs.defaultWarranty;
     }
 
     window.savePrefs = function() {
-      const prefs = {
-        warrantyAlert:    document.getElementById('toggleWarranty').checked,
-        pendingAlert:     document.getElementById('togglePending').checked,
-        defaultWarranty:  document.getElementById('defaultWarranty').value,
-      };
-      localStorage.setItem('app_prefs', JSON.stringify(prefs));
+      localStorage.setItem('app_prefs', JSON.stringify({
+        warrantyAlert:   document.getElementById('toggleWarranty').checked,
+        pendingAlert:    document.getElementById('togglePending').checked,
+        defaultWarranty: document.getElementById('defaultWarranty').value,
+      }));
       showToast('✅ Preferências salvas');
     };
 
-    // ── Alterar senha ──
     window.handleChangePassword = function() {
       showToast('📧 Link de redefinição enviado para seu e-mail');
     };
 
-    // ── Exportar dados ──
     window.exportData = function() {
       const clients = JSON.parse(localStorage.getItem('clients') || '[]');
       const blob = new Blob([JSON.stringify(clients, null, 2)], { type: 'application/json' });

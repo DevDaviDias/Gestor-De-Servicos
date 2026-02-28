@@ -29,7 +29,6 @@
       --radius-sm: 10px;
       --nav: 68px;
       --header: 60px;
-      --sidebar-w: 240px;
       --shadow-card: 0 2px 16px rgba(15,17,23,0.08);
       --shadow-btn: 0 4px 14px rgba(37,99,235,0.35);
     }
@@ -38,7 +37,7 @@
     html { -webkit-text-size-adjust: 100%; }
 
     /* ════════════════════════════════
-       BASE (mobile)
+       BASE — igual em todos os tamanhos
     ════════════════════════════════ */
     body {
       font-family: 'DM Sans', sans-serif;
@@ -50,14 +49,36 @@
     }
 
     /* ── Header ── */
-    
-  
+    .top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header);
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      z-index: 99;
+    }
+    .app-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.3px;
+    }
 
     /* ── Page content ── */
     .page-content {
       max-width: 520px;
       margin: 0 auto;
       padding: 24px 16px 0;
+    }
+
+    /* No PC, apenas aumenta um pouco a largura máxima */
+    @media (min-width: 768px) {
+      .page-content {
+        max-width: 680px;
+      }
     }
 
     /* ── Step header ── */
@@ -96,12 +117,19 @@
       letter-spacing: -0.5px;
     }
 
-    /* ── Steps ── */
+    /* ── Steps — mobile: 1 por vez / desktop: todos visíveis ── */
     .step { display: none; animation: fadeSlide 0.3s ease; }
     .step.active { display: block; }
     @keyframes fadeSlide {
       from { opacity: 0; transform: translateX(16px); }
       to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ── No desktop mostra todos os steps de uma vez ── */
+    @media (min-width: 768px) {
+      .step { display: block !important; animation: none; }
+      .step + .step { margin-top: 20px; }
+      .step-label { display: none; }
     }
 
     /* ── Cards ── */
@@ -122,6 +150,9 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
+    }
+    @media (min-width: 768px) {
+      .form-row { grid-template-columns: 1fr 1fr 1fr; }
     }
     label {
       font-size: 0.78rem;
@@ -339,6 +370,18 @@
       margin-top: 4px;
     }
 
+    /* No desktop, esconde os botões Voltar/Próximo dos steps 1 e 2,
+       mas mantém o botão Salvar no step 3 */
+    @media (min-width: 768px) {
+      #step1 .btn-row,
+      #step2 .btn-row { display: none; }
+
+      #step3 .btn-row {
+        grid-template-columns: 1fr;
+      }
+      #step3 .btn-secondary { display: none; }
+    }
+
     /* ── Alerts ── */
     .alert {
       padding: 14px 16px;
@@ -354,16 +397,25 @@
     .alert-success { background: var(--success-soft); color: var(--success); }
     .alert-error   { background: var(--danger-soft);  color: var(--danger); }
 
-    /* ── Bottom nav (mobile) ── */
+    /* ── Bottom nav — sempre fixo embaixo ── */
     .bottom-nav {
       position: fixed;
       bottom: 0; left: 0; right: 0;
+      top: auto;
+      width: 100%;
       height: var(--nav);
       background: var(--card);
       border-top: 1px solid var(--border);
+      border-right: none;
       display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: stretch;
       z-index: 100;
+      padding-top: 0;
     }
+    .bottom-nav::before { display: none; }
+
     .nav-item {
       flex: 1;
       display: flex;
@@ -375,14 +427,19 @@
       text-decoration: none;
       transition: color 0.2s;
       padding: 8px 0;
+      background: transparent;
+      border-radius: 0;
+      margin: 0;
     }
-    .nav-item.active { color: var(--accent); }
+    .nav-item:hover { color: var(--accent); background: transparent; }
+    .nav-item.active { color: var(--accent); background: transparent; }
     .nav-icon { font-size: 1.25rem; }
     .nav-label {
       font-size: 0.62rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      color: inherit;
     }
 
     /* ── Spinner ── */
@@ -395,138 +452,11 @@
       display: none;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-
-    /* ════════════════════════════════
-       DESKTOP  (min-width: 768px)
-    ════════════════════════════════ */
-    @media (min-width: 768px) {
-
-      /* body vira flex e perde os paddings do mobile */
-      body {
-        padding-top: 0;
-        padding-bottom: 0;
-        padding-left: var(--sidebar-w);
-        display: flex;
-      }
-
-      /* top-bar some — a nav lateral faz esse papel */
-      .top-bar { display: none; }
-
-      /* ── Nav vira sidebar lateral ── */
-      .bottom-nav {
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: auto;
-        width: var(--sidebar-w);
-        height: 100vh;
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 24px;
-        border-top: none;
-        border-right: 1px solid rgba(255,255,255,0.07);
-        background: var(--ink);
-      }
-
-      /* logo no topo da sidebar */
-      .bottom-nav::before {
-        content: '🔧 Gestão de Serviços';
-        display: block;
-        font-weight: 800;
-        font-size: 0.88rem;
-        color: white;
-        padding: 0 20px 20px;
-        border-bottom: 1px solid rgba(255,255,255,0.07);
-        margin-bottom: 12px;
-        letter-spacing: -0.3px;
-      }
-
-      /* itens da nav na vertical */
-      .nav-item {
-        flex: none;
-        flex-direction: row;
-        justify-content: flex-start;
-        padding: 12px 20px;
-        gap: 12px;
-        border-radius: 10px;
-        margin: 2px 8px;
-        color: rgba(255,255,255,0.45);
-      }
-      .nav-item:hover {
-        background: rgba(255,255,255,0.06);
-        color: rgba(255,255,255,0.85);
-      }
-      .nav-item.active {
-        background: rgba(37,99,235,0.2);
-        color: #93b4fb;
-      }
-      .nav-icon { font-size: 1rem; }
-      .nav-label {
-        font-size: 0.85rem;
-        text-transform: none;
-        letter-spacing: 0;
-        font-weight: 500;
-      }
-
-      /* ── Conteúdo principal ── */
-      .page-content {
-        flex: 1;
-        max-width: 100%;
-        padding: 36px 32px;
-        margin: 0;
-      }
-
-      /* ── Step header some — desktop mostra tudo ── */
-      .step-header { display: block; }
-      .step-label{ display: none; }
-
-      /* ── Todos os steps aparecem de uma vez ── */
-      .step          { display: block !important; animation: none; }
-      .step + .step  { margin-top: 20px; }
-
-      /* ── Botões de navegação entre steps somem ── */
-      .btn-row { display: none; }
-
-      /* ── Layout: form à esquerda, resumo à direita ── */
-      form {
-        display: grid;
-        grid-template-columns: 1fr 300px;
-        gap: 24px;
-        align-items: start;
-      }
-
-      #step1 { grid-column: 1; grid-row: 1; }
-      #step2 { grid-column: 1; grid-row: 2; }
-
-      /* step3 = coluna do resumo, fica fixo */
-      #step3 {
-        grid-column: 2;
-        grid-row: 1 / 4;
-        position: sticky;
-        top: 36px;
-      }
-
-  
-
-      #step3 .btn-row {
-        display: flex;
-        flex-direction: column;
-        margin-top: 4px;
-      }
-      #step3 .btn-secondary { display: none; }
-      #step3 .btn-primary   { width: 100%; }
-
-      /* ── Campos em 3 colunas no desktop ── */
-      .form-row {
-        grid-template-columns: 1fr 1fr 1fr;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <!-- Top bar (mobile only) -->
+  <!-- Top bar -->
   <header class="top-bar">
     <span class="app-name">🔧 Gestão de Serviços</span>
   </header>
@@ -539,7 +469,7 @@
       ❌ Erro ao cadastrar. Tente novamente.
     </div>
 
-    <!-- Step indicator (mobile only) -->
+    <!-- Step indicator -->
     <div class="step-header">
       <div class="step-indicator">
         <div class="step-dot active" id="dot1"></div>
@@ -666,9 +596,9 @@
     </form>
   </main>
 
-  <!-- Nav (mobile: bottom bar / desktop: sidebar) -->
-   <nav class="bottom-nav">
-    <a href="index.html" class="nav-item">
+  <!-- Nav — sempre embaixo -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
       <span class="nav-icon">📝</span>
       <span class="nav-label">Cadastro</span>
     </a>
@@ -680,14 +610,13 @@
       <span class="nav-icon">📊</span>
       <span class="nav-label">Relatórios</span>
     </a>
-    <a href="configuracoes.html" class="nav-item active">
+    <a href="configuracoes.html" class="nav-item">
       <span class="nav-icon">⚙️</span>
       <span class="nav-label">Config</span>
     </a>
   </nav>
 
   <script>
-    // ── Step Navigation (mobile) ──
     const steps  = ['step1','step2','step3'];
     const dots   = ['dot1','dot2','dot3'];
     const labels = ['Cliente & Serviço','Peças & Observações','Foto & Confirmar'];
@@ -695,7 +624,7 @@
     function isDesktop() { return window.innerWidth >= 768; }
 
     function goToStep(n) {
-      if (isDesktop()) return; // no desktop não há navegação por steps
+      if (isDesktop()) return;
 
       if (n === 2) {
         const name  = document.getElementById('clientName').value.trim();
@@ -741,7 +670,7 @@
       el.addEventListener('change', () => { if (isDesktop()) updateSummary(); });
     });
 
-    // ── Photo Preview ──
+    // Photo Preview
     document.getElementById('servicePhoto').addEventListener('change', e => {
       const file = e.target.files[0];
       if (!file) return;
@@ -754,7 +683,7 @@
       reader.readAsDataURL(file);
     });
 
-    // ── Add Part ──
+    // Add Part
     document.getElementById('addPart').addEventListener('click', () => {
       const item = document.createElement('div');
       item.className = 'part-item';
@@ -772,14 +701,12 @@
         e.target.closest('.part-item').remove();
     });
 
-    // ── Loading state ──
     window.setLoading = show => {
-      document.getElementById('submitBtn').disabled        = show;
-      document.getElementById('submitText').style.display  = show ? 'none' : 'inline';
+      document.getElementById('submitBtn').disabled           = show;
+      document.getElementById('submitText').style.display     = show ? 'none' : 'inline';
       document.getElementById('loadingSpinner').style.display = show ? 'inline-block' : 'none';
     };
 
-    // ── Alerts ──
     window.showAlert = id => {
       const el = document.getElementById(id);
       el.classList.add('show');
