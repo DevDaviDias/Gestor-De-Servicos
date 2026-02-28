@@ -28,7 +28,6 @@
       --radius-sm: 10px;
       --nav: 68px;
       --header: 60px;
-      --sidebar-w: 240px;
       --shadow-card: 0 2px 16px rgba(15, 17, 23, 0.08);
       --shadow-btn: 0 4px 14px rgba(37, 99, 235, 0.35);
     }
@@ -46,7 +45,7 @@
     }
 
     /* ════════════════════════════════
-       BASE (mobile)
+       BASE — igual em todos os tamanhos
     ════════════════════════════════ */
     body {
       font-family: 'DM Sans', sans-serif;
@@ -57,9 +56,6 @@
       padding-bottom: calc(var(--nav) + 20px);
     }
 
-    /* ── Header ── */
-
-
     /* ── Page content ── */
     .page-content {
       max-width: 520px;
@@ -67,17 +63,29 @@
       padding: 24px 16px 0;
     }
 
-    /* ── Bottom nav (mobile) ── */
+    /* ── Bottom nav — fixo embaixo em QUALQUER tela ── */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
+      top: auto;         /* garante que nunca vira sidebar */
+      width: 100%;       /* largura total */
       height: var(--nav);
       background: var(--card);
       border-top: 1px solid var(--border);
+      border-right: none;
       display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: stretch;
       z-index: 100;
+      padding-top: 0;
+    }
+
+    /* remove o pseudo-elemento com o nome do app que aparecia no desktop */
+    .bottom-nav::before {
+      display: none;
     }
 
     .nav-item {
@@ -91,10 +99,20 @@
       text-decoration: none;
       transition: color 0.2s;
       padding: 8px 0;
+      /* desfaz os estilos de sidebar que poderiam vazar */
+      background: transparent;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .nav-item:hover {
+      background: transparent;
+      color: var(--accent);
     }
 
     .nav-item.active {
       color: var(--accent);
+      background: transparent;
     }
 
     .nav-icon {
@@ -106,116 +124,183 @@
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      color: inherit;
     }
 
-    /* ════════════════════════════════
-       DESKTOP (min-width: 768px)
-    ════════════════════════════════ */
+    /* ── Header ── */
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header);
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      z-index: 99;
+    }
+
+    .app-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+    }
+
+    /* ── Seletor de mês ── */
+    .month-selector-wrap {
+      margin-bottom: 20px;
+    }
+
+    .month-select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      font-size: 0.95rem;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    /* ── Grid de relatórios ── */
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* No PC, mantém 2 colunas (igual ao celular em landscape) */
     @media (min-width: 768px) {
-
-      body {
-        padding-top: 0;
-        padding-bottom: 0;
-        padding-left: var(--sidebar-w);
-        display: flex;
-      }
-
-
-
-      /* ── Nav vira sidebar lateral ── */
-      .bottom-nav {
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: auto;
-        width: var(--sidebar-w);
-        height: 100vh;
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 24px;
-        border-top: none;
-        border-right: 1px solid rgba(255, 255, 255, 0.07);
-        background: var(--ink);
-      }
-
-      .bottom-nav::before {
-        content: '🔧 Gestão de Serviços';
-        display: block;
-        font-weight: 800;
-        font-size: 0.88rem;
-        color: white;
-        padding: 0 20px 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-        margin-bottom: 12px;
-        letter-spacing: -0.3px;
-      }
-
-      .nav-item {
-        flex: none;
-        flex-direction: row;
-        justify-content: flex-start;
-        padding: 12px 20px;
-        gap: 12px;
-        border-radius: 10px;
-        margin: 2px 8px;
-        color: rgba(255, 255, 255, 0.45);
-      }
-
-      .nav-item:hover {
-        background: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.85);
-      }
-
-      .nav-item.active {
-        background: rgba(37, 99, 235, 0.2);
-        color: #93b4fb;
-      }
-
-      .nav-icon {
-        font-size: 1rem;
-      }
-
-      .nav-label {
-        font-size: 0.85rem;
-        text-transform: none;
-        letter-spacing: 0;
-        font-weight: 500;
-      }
-
-      /* ── Conteúdo principal ── */
       .page-content {
-        flex: 1;
-        max-width: 100%;
-        padding: 36px 32px;
-        margin: 0;
-        margin-top: 3em;
+        max-width: 600px;
       }
+    }
 
-      /* Grid de relatórios com mais colunas */
-      .reports-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
+    .report-card {
+      background: var(--card);
+      border-radius: var(--radius-md);
+      padding: 18px 16px;
+      box-shadow: var(--shadow-card);
+    }
 
-      /* Card de largura total ocupa as 3 colunas */
-      .full-width {
-        grid-column: 1 / -1;
-      }
+    .report-card.blue  { border-left: 4px solid var(--accent); }
+    .report-card.red   { border-left: 4px solid var(--danger); }
+    .report-card.green { border-left: 4px solid var(--success); }
+    .report-card.white { border-left: 4px solid var(--border); }
 
-      .app-name {
-        padding-top: 0.5em;
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: var(--ink);
-        letter-spacing: -0.5px;
-        margin-left: 10em;
-      }
+    .report-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
 
+    .report-value {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+    }
+
+    .report-sub {
+      font-size: 0.75rem;
+      color: var(--ink-muted);
+      margin-top: 4px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .summary-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+    }
+
+    .text-green { color: var(--success); }
+    .text-red   { color: var(--danger); }
+
+    .top-clients-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    /* ── Loading ── */
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 40px 0;
+      color: var(--ink-muted);
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Botões ── */
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+      margin-bottom: 16px;
+    }
+
+    .btn-primary {
+      flex: 1;
+      padding: 13px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: var(--shadow-btn);
+    }
+
+    /* ── No data ── */
+    .no-data {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--ink-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
     }
   </style>
 </head>
 
 <body>
-
 
   <header class="top-bar">
     <span class="app-name">Relatórios</span>
@@ -288,7 +373,7 @@
     </div>
   </main>
 
-  <!-- Nav (mobile: bottom bar / desktop: sidebar) -->
+  <!-- Nav — sempre embaixo, em qualquer tamanho de tela -->
   <nav class="bottom-nav">
     <a href="index.html" class="nav-item">
       <span class="nav-icon">📝</span>
@@ -298,11 +383,11 @@
       <span class="nav-icon">👥</span>
       <span class="nav-label">Clientes</span>
     </a>
-    <a href="relatorios.html" class="nav-item">
+    <a href="relatorios.html" class="nav-item active">
       <span class="nav-icon">📊</span>
       <span class="nav-label">Relatórios</span>
     </a>
-    <a href="configuracoes.html" class="nav-item active">
+    <a href="configuracoes.html" class="nav-item">
       <span class="nav-icon">⚙️</span>
       <span class="nav-label">Config</span>
     </a>

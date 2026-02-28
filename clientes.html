@@ -30,7 +30,6 @@
       --radius-sm: 10px;
       --nav: 68px;
       --header: 60px;
-      --sidebar-w: 240px;
       --shadow-card: 0 2px 16px rgba(15,17,23,0.08);
       --shadow-btn: 0 4px 14px rgba(37,99,235,0.35);
     }
@@ -39,7 +38,7 @@
     html { -webkit-text-size-adjust: 100%; }
 
     /* ════════════════════════════════
-       BASE (mobile)
+       BASE — igual em todos os tamanhos
     ════════════════════════════════ */
     body {
       font-family: 'DM Sans', sans-serif;
@@ -61,12 +60,11 @@
       align-items: center;
       padding: 0 20px;
       z-index: 100;
-      margin-bottom: 2;
     }
     .app-name {
       font-weight: 800;
       font-size: 1.05rem;
-      color: var(--accent);
+      color: var(--ink);
       letter-spacing: -0.3px;
     }
 
@@ -77,16 +75,44 @@
       padding: 24px 16px 0;
     }
 
-    /* ── Bottom nav (mobile) ── */
+    @media (min-width: 768px) {
+      .page-content {
+        max-width: 900px;
+      }
+      /* Grid de clientes com mais colunas no desktop */
+      .clients-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+      }
+      /* Modal mais largo */
+      .modal-content {
+        max-width: 560px;
+        border-radius: 20px;
+      }
+      .modal-receipt {
+        max-height: 90vh;
+        border-radius: 20px;
+      }
+    }
+
+    /* ── Bottom nav — sempre fixo embaixo ── */
     .bottom-nav {
       position: fixed;
       bottom: 0; left: 0; right: 0;
+      top: auto;
+      width: 100%;
       height: var(--nav);
       background: var(--card);
       border-top: 1px solid var(--border);
+      border-right: none;
       display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: stretch;
       z-index: 100;
+      padding-top: 0;
     }
+    .bottom-nav::before { display: none; }
+
     .nav-item {
       flex: 1;
       display: flex;
@@ -98,14 +124,19 @@
       text-decoration: none;
       transition: color 0.2s;
       padding: 8px 0;
+      background: transparent;
+      border-radius: 0;
+      margin: 0;
     }
-    .nav-item.active { color: var(--accent); }
+    .nav-item:hover { color: var(--accent); background: transparent; }
+    .nav-item.active { color: var(--accent); background: transparent; }
     .nav-icon { font-size: 1.25rem; }
     .nav-label {
       font-size: 0.62rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      color: inherit;
     }
 
     /* ── Receipt Modal ── */
@@ -209,123 +240,11 @@
       font-weight:500; cursor:pointer; transition:all 0.2s;
     }
     .btn-download:hover { background:#e8eaee; }
-
-    /* ════════════════════════════════
-       DESKTOP (min-width: 768px)
-    ════════════════════════════════ */
-    @media (min-width: 768px) {
-
-      body {
-        padding-top: 0;
-        padding-bottom: 0;
-        padding-left: var(--sidebar-w);
-        display: flex;
-      }
-
-      .top-bar { display: block; }
-
-      /* ── Nav vira sidebar lateral ── */
-      .bottom-nav {
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: auto;
-        width: var(--sidebar-w);
-        height: 100vh;
-        flex-direction: column;
-        justify-content: flex-start;
-        padding-top: 24px;
-        border-top: none;
-        border-right: 1px solid rgba(255,255,255,0.07);
-        background: var(--ink);
-      }
-
-      .bottom-nav::before {
-        content: '🔧 Gestão de Serviços';
-        display: block;
-        font-weight: 800;
-        font-size: 0.88rem;
-        color: white;
-        padding: 0 20px 20px;
-        border-bottom: 1px solid rgba(255,255,255,0.07);
-        margin-bottom: 12px;
-        letter-spacing: -0.3px;
-      }
-
-      .nav-item {
-        flex: none;
-        flex-direction: row;
-        justify-content: flex-start;
-        padding: 12px 20px;
-        gap: 12px;
-        border-radius: 10px;
-        margin: 2px 8px;
-        color: rgba(255,255,255,0.45);
-      }
-      .nav-item:hover {
-        background: rgba(255,255,255,0.06);
-        color: rgba(255,255,255,0.85);
-      }
-      .nav-item.active {
-        background: rgba(37,99,235,0.2);
-        color: #93b4fb;
-      }
-      .nav-icon { font-size: 1rem; }
-      .nav-label {
-        font-size: 0.85rem;
-        text-transform: none;
-        letter-spacing: 0;
-        font-weight: 500;
-      }
-
-      /* ── Conteúdo principal ── */
-      .page-content {
-        flex: 1;
-        max-width: 100%;
-        padding: 36px 32px;
-        margin: 0;
-      }
-
-      /* Grid de clientes com mais colunas */
-      .clients-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      }
-
-      /* Modal mais largo e centralizado */
-      .modal-content {
-        max-width: 560px;
-        border-radius: 20px;
-      }
-      .modal-receipt {
-        max-height: 90vh;
-        border-radius: 20px;
-      }
-      .search-input {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid var(--gray-200);
-  border-radius: var(--radius);
-  font-size: 0.95rem;
-  background: var(--white);
-  margin-top: 40px;
-}
-.search-input:focus {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-.app-name {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--ink);
-      letter-spacing: -0.5px;
-      margin-left: 10em;
-    }
-    }
   </style>
 </head>
 
 <body>
- <header class="top-bar">
+  <header class="top-bar">
     <span class="app-name">Registro de Clientes</span>
   </header>
 
@@ -483,13 +402,13 @@
     </div>
   </div>
 
-  <!-- Nav (mobile: bottom bar / desktop: sidebar) -->
-   <nav class="bottom-nav">
+  <!-- Nav — sempre embaixo -->
+  <nav class="bottom-nav">
     <a href="index.html" class="nav-item">
       <span class="nav-icon">📝</span>
       <span class="nav-label">Cadastro</span>
     </a>
-    <a href="clientes.html" class="nav-item">
+    <a href="clientes.html" class="nav-item active">
       <span class="nav-icon">👥</span>
       <span class="nav-label">Clientes</span>
     </a>
@@ -497,7 +416,7 @@
       <span class="nav-icon">📊</span>
       <span class="nav-label">Relatórios</span>
     </a>
-    <a href="configuracoes.html" class="nav-item active">
+    <a href="configuracoes.html" class="nav-item">
       <span class="nav-icon">⚙️</span>
       <span class="nav-label">Config</span>
     </a>
