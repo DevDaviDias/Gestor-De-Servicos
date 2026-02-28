@@ -222,15 +222,18 @@
     .parts-list { display: flex; flex-direction: column; gap: 10px; }
     .part-item {
       display: grid;
-      grid-template-columns: 1fr 100px 36px;
+      grid-template-columns: 1fr 36px;
+      grid-template-rows: auto auto;
       gap: 8px;
-      align-items: center;
       background: var(--surface);
       padding: 10px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
     }
-    .part-item input { background: var(--card); padding: 9px 12px; font-size: 0.88rem; }
+    .part-item .part-name  { grid-column: 1 / -1; }
+    .part-item .part-cost  { grid-column: 1; }
+    .part-item .btn-remove-part { grid-column: 2; align-self: center; }
+    .part-item input { background: var(--card); padding: 9px 12px; font-size: 0.95rem; }
     .btn-remove-part {
       width: 36px; height: 36px;
       border-radius: 8px;
@@ -561,7 +564,7 @@
           <div class="form-group">
             <label>Foto do Serviço</label>
             <div class="photo-upload-area" id="photoUploadArea">
-              <input type="file" id="servicePhoto" accept="image/*" capture="environment">
+              <input type="file" id="servicePhoto" accept="image/*" >
               <div class="photo-icon">📷</div>
               <div class="photo-text">
                 <strong>Toque para tirar foto</strong><br>
