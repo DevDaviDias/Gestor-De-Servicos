@@ -37,9 +37,6 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-text-size-adjust: 100%; }
 
-    /* ════════════════════════════════
-       BASE — igual em todos os tamanhos
-    ════════════════════════════════ */
     body {
       font-family: 'DM Sans', sans-serif;
       background: var(--surface);
@@ -49,7 +46,6 @@
       padding-bottom: calc(var(--nav) + 20px);
     }
 
-    /* ── Header ── */
     .top-bar {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -68,7 +64,6 @@
       letter-spacing: -0.3px;
     }
 
-    /* ── Page content ── */
     .page-content {
       max-width: 520px;
       margin: 0 auto;
@@ -76,25 +71,12 @@
     }
 
     @media (min-width: 768px) {
-      .page-content {
-        max-width: 900px;
-      }
-      /* Grid de clientes com mais colunas no desktop */
-      .clients-grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
-      }
-      /* Modal mais largo */
-      .modal-content {
-        max-width: 560px;
-        border-radius: 20px;
-      }
-      .modal-receipt {
-        max-height: 90vh;
-        border-radius: 20px;
-      }
+      .page-content { max-width: 900px; }
+      .clients-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important; }
+      .modal-content { max-width: 560px; border-radius: 20px; }
+      .modal-receipt { max-height: 90vh; border-radius: 20px; }
     }
 
-    /* ── Bottom nav — sempre fixo embaixo ── */
     .bottom-nav {
       position: fixed;
       bottom: 0; left: 0; right: 0;
@@ -139,7 +121,6 @@
       color: inherit;
     }
 
-    /* ── Receipt Modal ── */
     .modal-receipt {
       max-height: 92vh;
       overflow-y: auto;
@@ -240,6 +221,18 @@
       font-weight:500; cursor:pointer; transition:all 0.2s;
     }
     .btn-download:hover { background:#e8eaee; }
+
+    /* ── Impressão ── */
+    @media print {
+      body * { visibility: hidden; }
+      #receiptContent, #receiptContent * { visibility: visible; }
+      #receiptContent {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        box-shadow: none;
+      }
+    }
   </style>
 </head>
 
@@ -342,9 +335,10 @@
       <div id="receiptPreview" class="receipt-wrapper">
         <div id="receiptContent" class="receipt">
           <div class="receipt-header">
-            <div class="receipt-logo">🔧</div>
+            <div class="receipt-logo">❄️</div>
             <div class="receipt-brand">
-              <div class="receipt-brand-name">Gestão de Serviços</div>
+              <!-- ALTERADO: era "Gestão de Serviços" -->
+              <div class="receipt-brand-name">Levi Refrigeração</div>
               <div class="receipt-brand-sub">Comprovante de Serviço</div>
             </div>
             <div class="receipt-badge" id="receiptBadge">PAGO</div>
@@ -387,6 +381,8 @@
             <div class="receipt-footer-line"></div>
             <p>Serviço realizado com qualidade e compromisso.</p>
             <p>Garantia assegurada conforme descrito neste comprovante.</p>
+            <!-- ALTERADO: nome da empresa no rodapé -->
+            <p style="margin-top:6px; font-weight:700; color:#2563eb; font-size:0.8rem;">Levi Refrigeração</p>
           </div>
         </div>
       </div>
@@ -397,6 +393,10 @@
         </button>
         <button id="downloadReceiptBtn" class="btn-download">
           ⬇️ Baixar Imagem
+        </button>
+        <!-- NOVO: botão de impressão -->
+        <button id="printReceiptBtn" class="btn-download" onclick="window.print()">
+          🖨️ Imprimir Comprovante
         </button>
       </div>
     </div>
