@@ -192,19 +192,49 @@
     .receipt-part-row span:last-child { font-weight:600; color:#2563eb; }
     .receipt-obs { padding:10px 20px 16px; font-size:0.85rem; color:#4a4e5a; line-height:1.5; }
     .receipt-total {
-      margin: 0 20px 20px;
+      margin: 0 20px 16px;
       background: #0f1117; color: white;
       border-radius: 10px; padding: 14px 18px;
       display:flex; justify-content:space-between; align-items:center;
       font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem;
     }
+
+    /* ── Bloco de assinatura ── */
+    .receipt-signature {
+      margin: 0 20px 16px;
+      padding-top: 14px;
+    }
+    .receipt-signature-line {
+      border-top: 1.5px solid #0f1117;
+      margin-bottom: 8px;
+    }
+    .receipt-signature-name {
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: #0f1117;
+      letter-spacing: 0.2px;
+    }
+    .receipt-signature-role {
+      text-align: center;
+      font-size: 0.72rem;
+      color: #9095a1;
+      margin-top: 2px;
+    }
+
     .receipt-footer {
-      padding:16px 20px; background:#f9fafb;
+      padding:14px 20px 16px; background:#f9fafb;
       text-align:center; border-top:1px dashed #e8eaee;
     }
-    .receipt-footer-line { display:flex; gap:4px; justify-content:center; margin-bottom:10px; }
+    .receipt-footer-line { display:flex; gap:4px; justify-content:center; margin-bottom:8px; }
     .receipt-footer-line::before { content:'✦ ✦ ✦'; color:#2563eb; font-size:0.7rem; letter-spacing:4px; }
     .receipt-footer p { font-size:0.72rem; color:#9095a1; line-height:1.6; }
+    .receipt-footer-phone {
+      margin-top: 6px;
+      font-weight: 700;
+      font-size: 0.78rem;
+      color: #2563eb;
+    }
 
     .receipt-actions { display:flex; flex-direction:column; gap:10px; }
     .btn-whatsapp-full {
@@ -225,47 +255,38 @@
     .btn-download:hover { background:#e8eaee; }
 
     /* ══════════════════════════════════════
-       IMPRESSÃO — layout profissional
+       IMPRESSÃO
     ══════════════════════════════════════ */
     @media print {
-      /* Remove cabeçalho e rodapé do browser (data, URL, título) */
       @page {
         margin: 12mm 14mm;
         size: A4;
       }
 
-      /* Esconde tudo */
       body * { visibility: hidden; }
 
-      /* Mostra só o comprovante */
       #receiptContent,
       #receiptContent * { visibility: visible; }
 
-      /* Posiciona o comprovante na página */
       #receiptContent {
         position: fixed;
-        top: 0; left: 0;
-        width: 100%;
-        max-width: 520px;
-        margin: 0 auto;
+        top: 0;
         left: 50%;
         transform: translateX(-50%);
+        width: 520px;
         box-shadow: none !important;
         border-radius: 8px;
         overflow: hidden;
-        font-size: 11pt;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
       }
 
-      /* Garante que gradiente do header imprime */
       .receipt-header {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
         background: linear-gradient(135deg, #1d4ed8, #2563eb) !important;
       }
 
-      /* Total com fundo preto imprime */
       .receipt-total {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
@@ -273,10 +294,8 @@
         color: #fff !important;
       }
 
-      /* Esconde foto se não tiver (já tratado por JS, mas garante) */
       .receipt-photo-wrap:not(.has-photo) { display: none !important; }
 
-      /* Sem quebra de página dentro do comprovante */
       #receiptContent { page-break-inside: avoid; }
     }
   </style>
@@ -380,6 +399,7 @@
 
       <div id="receiptPreview" class="receipt-wrapper">
         <div id="receiptContent" class="receipt">
+
           <div class="receipt-header">
             <div class="receipt-logo">❄️</div>
             <div class="receipt-brand">
@@ -389,7 +409,6 @@
             <div class="receipt-badge" id="receiptBadge">PAGO</div>
           </div>
 
-          <!-- Foto: oculta por padrão via CSS; JS adiciona .has-photo quando houver imagem -->
           <div id="receiptPhotoWrap" class="receipt-photo-wrap">
             <img id="receiptPhoto" src="" alt="">
           </div>
@@ -423,12 +442,20 @@
             <span id="rTotal">R$ 0,00</span>
           </div>
 
+          <!-- Bloco de assinatura -->
+          <div class="receipt-signature">
+            <div class="receipt-signature-line"></div>
+            <div class="receipt-signature-name">Levi Refrigeração</div>
+            <div class="receipt-signature-role">Responsável pelo Serviço</div>
+          </div>
+
           <div class="receipt-footer">
             <div class="receipt-footer-line"></div>
             <p>Serviço realizado com qualidade e compromisso.</p>
             <p>Garantia assegurada conforme descrito neste comprovante.</p>
-            <p style="margin-top:6px; font-weight:700; color:#2563eb; font-size:0.8rem;">Levi Refrigeração</p>
+            <p class="receipt-footer-phone">📞 (31) 99501-1280</p>
           </div>
+
         </div>
       </div>
 
@@ -446,7 +473,7 @@
     </div>
   </div>
 
-  <!-- Nav — sempre embaixo -->
+  <!-- Nav -->
   <nav class="bottom-nav">
     <a href="index.html" class="nav-item">
       <span class="nav-icon">📝</span>
@@ -468,28 +495,22 @@
 
   <script type="module" src="./src/js/main.js"></script>
 
-  <!-- Garante que foto sem src não mostra o bloco -->
   <script>
     (function() {
       var img = document.getElementById('receiptPhoto');
       var wrap = document.getElementById('receiptPhotoWrap');
-      if (img && wrap) {
-        img.addEventListener('load', function() {
-          if (img.src && img.src !== window.location.href) {
-            wrap.classList.add('has-photo');
-          }
-        });
-        img.addEventListener('error', function() {
+      if (!img || !wrap) return;
+      img.addEventListener('load', function() {
+        if (img.src && img.src !== window.location.href) wrap.classList.add('has-photo');
+      });
+      img.addEventListener('error', function() {
+        wrap.classList.remove('has-photo');
+      });
+      new MutationObserver(function() {
+        if (!img.src || img.src === window.location.href || img.src === '') {
           wrap.classList.remove('has-photo');
-        });
-        // Observer para quando o JS do app definir o src depois do load
-        var observer = new MutationObserver(function() {
-          if (!img.src || img.src === window.location.href || img.src === '') {
-            wrap.classList.remove('has-photo');
-          }
-        });
-        observer.observe(img, { attributes: true, attributeFilter: ['src'] });
-      }
+        }
+      }).observe(img, { attributes: true, attributeFilter: ['src'] });
     })();
   </script>
 </body>
